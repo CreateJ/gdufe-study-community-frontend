@@ -3,6 +3,7 @@
 import Vue from "vue";
 import App from "./App";
 import router from "./router";
+import store from './store';
 import "./plugins/element.js";
 
 Vue.config.productionTip = false;
@@ -12,9 +13,15 @@ Vue.config.productionTip = false;
 new Vue({
   el: "#app",
   router,
+  store,
   components: { App },
   template: "<App/>"
 });
 
 
 require('./assets/css/base.css');
+
+// qs 插件
+import qs from 'qs'
+Vue.prototype.$qs=qs
+

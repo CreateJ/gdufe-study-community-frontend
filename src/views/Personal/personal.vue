@@ -1,7 +1,9 @@
 <template>
-  <div id="discuss">
-    <h2>这里是Discuss</h2>
-  </div>
+  <div id="personal"> <el-row class="helloBox">
+      <el-col :span="16" :offset="4">
+        <div>hello </div>
+      </el-col>
+    </el-row></div>
 </template>
 
 <script>
@@ -21,8 +23,9 @@ export default {
 };
 </script>
 <style scoped>
-#discuss {
+#personal {
+    width: 100%;
   min-height: 780px;
-  padding: 0 20px
+  /* padding: 0 20px */
 }
 </style>
