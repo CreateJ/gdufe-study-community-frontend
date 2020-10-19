@@ -35,7 +35,7 @@
         <el-menu-item index="/home">首页</el-menu-item>
       </li>
       <li v-show="$store.state.isLogin">
-        <el-menu-item index="/discuss">消息</el-menu-item>
+        <el-menu-item index="/message">消息</el-menu-item>
       </li>
       <li v-show="$store.state.isLogin">
         <el-submenu index="2">
@@ -44,7 +44,8 @@
           }}</template>
           <el-menu-item index="/personal">个人空间</el-menu-item>
           <el-menu-item index="/info">修改信息</el-menu-item>
-          <el-menu-item index="/logout">退出登录</el-menu-item>
+          <!-- 点击退出登录将直接跳转到home，恢复至未登录状态 -->
+          <el-menu-item index="/home" @click="logout">退出登录</el-menu-item>
         </el-submenu>
       </li>
     </ul>
@@ -53,6 +54,8 @@
 
 <script>
 import { LinkTo } from "@/assets/utils/baseUtil"
+import { clearLoingCookie } from "@/plugins/vue-cookies.js"
+import { LGOT } from "@/store/mutations-types"
 export default {
   name: "vueFooter",
   components: {},
@@ -70,6 +73,10 @@ export default {
       console.log(key, keyPath);
     },
     LinkTo,
+    logout(){
+      clearLoingCookie();
+      this.$store.commit( LGOT )
+    }
   },
   created() {},
   mounted() {}

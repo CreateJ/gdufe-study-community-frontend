@@ -27,8 +27,10 @@
 
 <script>
 import { getIndexData, getIndexDataNew } from "@/network/home";
+import { LGSC } from "@/store/mutations-types"
+import { ITLG } from "@/store/actions-types"
 import Hello from "@/views/Home/Hello";
-import Dropdown from "@/views/Home/Dropdown"
+import Dropdown from "@/views/Home/Dropdown";
 import HomePost from "@/views/Home/Post";
 
 export default {
@@ -67,13 +69,16 @@ export default {
           this.postDatas.push(item);
         });
       });
-    }
+    },
+    
   },
   created() {
+    // 获取首页文章列表
     getIndexData().then(res => {
       // console.log(res);
       this.postDatas = res.discussPosts;
     });
+
   },
   mounted() {}
 };

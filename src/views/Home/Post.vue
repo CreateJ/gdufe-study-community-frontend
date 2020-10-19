@@ -1,6 +1,6 @@
 <template>
   <li class="postItemzBox">
-    <router-link to="/discuss" tag="div" push class="postItem">
+    <router-link :to="'/discuss/'+postItem.post.id" tag="div" push class="postItem">
       <div class="avatar"><img :src="postItem.user.headerUrl" /></div>
       <div class="postInfo">
         <div class="postInfoTitle">
@@ -73,11 +73,11 @@ export default {
   cursor: pointer;
 }
 .avatar {
-  flex: 1;
+  flex: 1.5;
   vertical-align: top;
   display: inline-block;
-  height: 32px;
-  width: 32px;
+  /* height: 40px;
+  width: 40px; */
   padding-right: 10px;
 }
 .avatar img {

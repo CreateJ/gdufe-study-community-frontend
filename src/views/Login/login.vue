@@ -50,6 +50,7 @@ import { LinkTo } from "@/assets/utils/baseUtil"
 import { getKaptcha, checkLoginData } from "@/network/login";
 import { LGSC } from "@/store/mutations-types"
 import { ITLG } from "@/store/actions-types"
+import { setLoginCookie, clearLoingCookie } from "@/plugins/vue-cookies"
 import axios from "axios";
 export default {
   name: "",
@@ -69,6 +70,9 @@ export default {
     forgetPWClick() {
       console.log(this.userID + " " + this.userPW);
     },
+    // 点击立即登录，会开启验证，
+    // 根据服务器返回的信息进行相应的提示以及初始化登录状态操作，
+    // 包括向服务器请求该账号对应的id相关的信息
     loginCLick() {
       let data = {
         username: this.userID,
@@ -87,6 +91,8 @@ export default {
             // 延时跳转
             this.$store.commit(LGSC);
             this.$store.dispatch(ITLG,{userId:res.msg});
+            // 将登录id保存到cookie中，设置过期时间为1d，后续可以在plugin/vue-cookies中修改
+            setLoginCookie(res.msg);
             this.LinkTo('/home','replace')
           },2000)
         } else if (res.code == "2006") {
@@ -106,10 +112,14 @@ export default {
         }
       });
     },
+    // 公共跳转方法
     LinkTo,
+    // 刷新验证码
     refreshKaptcha() {
       this.kaptcha = this.$store.state.baseURL + "/kaptcha?p=" + Math.random();
-    }
+    },
+    // 设置登录cookie，方便后续检测登录状态
+    setLoginCookie,
   },
   created() {
     // 初始化验证码

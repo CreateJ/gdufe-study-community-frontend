@@ -19,11 +19,12 @@ export function request(config) {
       // 注意传回来的data参数必须带有data和$_isFormDatal两项
       if (config.method == "post") {
         if (config.data && config.data.$_isFormData === false) {
-          config.headers["Content-Type"] = "application/json";
-          console.log(1);
+          // config.headers["Content-Type"] = "application/json";
+          console.log("1");
           config.data = config.data.dataobj;
         } else {
           // config.headers["Content-Type"] = "multipart/form-data";
+          console.log("2");
           config.data = config.data.formData;
         }
       }
@@ -44,9 +45,11 @@ export function request(config) {
       return res.data;
     },
     err => {
-      console.log(
-        "获取响应失败：真的获取不到数据啊！我哭了！\n" + "错误信息:" + err
-      );
+      let error = "获取响应失败：真的获取不到数据啊！我哭了！\n" + "错误信息:" + err;
+      // console.log(
+      //   "获取响应失败：真的获取不到数据啊！我哭了！\n" + "错误信息:" + err
+      // );
+      return Promise.reject(error)
     }
   );
 

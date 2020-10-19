@@ -1,6 +1,10 @@
 <template>
-  <div id="discuss">
-    <h2>这里是Discuss</h2>
+  <div id="message">
+    <el-row>
+      <el-col :span="16" :offset="4">
+        <h2>消息页面</h2>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -21,8 +25,9 @@ export default {
 };
 </script>
 <style scoped>
-#discuss {
-  min-height: 780px;
-  padding: 0 20px
+#message {
+  width: 100%;
+  min-height: 800px;
+  /* padding: 0 20px */
 }
 </style>

@@ -2,10 +2,12 @@ import Vue from "vue";
 import Router from "vue-router";
 
 const Home = () => import("@/views/Home/Home");
-const Discuss = () => import("@/views/Disscuss/Discuss");
+const Discuss = () => import("@/views/Discuss/Discuss");
 const Register = () => import("@/views/Register/register");
 const Login = () => import("@/views/Login/login");
 const Personal = () => import("@/views/Personal/personal");
+const Message = () => import("@/views/Message/message");
+const Null = () => import("@/views/Null/null");
 
 Vue.use(Router);
 
@@ -21,7 +23,7 @@ export default new Router({
       component: Home
     },
     {
-      path: "/discuss",
+      path: "/discuss/:postId",
       name: "discuss",
       component: Discuss
     },
@@ -39,6 +41,16 @@ export default new Router({
       path: "/personal",
       name: "personal",
       component: Personal
+    },
+    {
+      path: "/message",
+      name: "message",
+      component: Message
+    },
+    {
+      path: "/null",
+      name: "null",
+      component: Null
     }
   ]
 });
