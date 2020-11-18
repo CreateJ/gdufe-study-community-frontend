@@ -32,6 +32,9 @@
         <el-menu-item index="/register">注册</el-menu-item>
       </li>
       <li v-show="$store.state.isLogin">
+        <el-menu-item index="/test">测试</el-menu-item>
+      </li>
+      <li v-show="$store.state.isLogin">
         <el-menu-item index="/home">首页</el-menu-item>
       </li>
       <li v-show="$store.state.isLogin">

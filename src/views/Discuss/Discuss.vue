@@ -27,6 +27,7 @@
                     : require('@/assets/images/icons/love_grey.png')
                 "
                 alt=""
+                @click="clickLike(postType,postId,postUserId,postId)"
               />
               <span class="likeCount">{{ likeCount }}</span>
             </a>
@@ -56,7 +57,7 @@
 </template>
 
 <script>
-import { getPostAllInfo } from "@/network/discuss";
+import { getPostAllInfo,sendLike } from "@/network/discuss";
 import replyList from "@/views/Discuss/replyList";
 import { OPDE, CODE, URRI} from "@/store/mutations-types";
 import { GRPI } from "@/store/actions-types";
@@ -79,6 +80,8 @@ export default {
       targetId: "",
       likeCount: 0,
       likeStatus: 1,
+      postType: 1,
+      postUserId: "",
     };
   },
   watch: {},
@@ -96,12 +99,19 @@ export default {
         this.replyListData = res.comments;
         this.targetId = res.user.id;
         this.likeCount = res.likeCount;
-        this.likeStatus = res.likeStatus
+        this.likeStatus = res.likeStatus;
+        this.postType = res.post.postType;
+        this.postUserId = res.post.userId;
         // console.log(res)
       });
     },
-    clickLike(){
-
+    clickLike(entityType,entityId,entityUserId,postId){
+      // 传入参数 entityType:实体类型;entityId:实体id;entityUserId:实体对应的用户id;postId:文章对应id;
+      sendLike(entityType,entityId,entityUserId,postId).then(res => {
+        console.log(res);
+      }).catch(err => {
+        console.log(err);
+      })
     },
     clickReply(id, entityId, entityType) {
       this.$store.commit(OPDE);

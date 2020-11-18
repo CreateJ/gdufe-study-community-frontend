@@ -8,6 +8,7 @@ const Login = () => import("@/views/Login/login");
 const Personal = () => import("@/views/Personal/personal");
 const Message = () => import("@/views/Message/message");
 const Null = () => import("@/views/Null/null");
+const Test = () => import("@/views/Test/test");
 
 Vue.use(Router);
 
@@ -51,6 +52,11 @@ export default new Router({
       path: "/null",
       name: "null",
       component: Null
+    },
+    {
+      path: "/test",
+      name: "test",
+      component: Test
     }
   ]
 });
