@@ -1,46 +1,44 @@
 <template>
   <div class="register">
     <div class="box">
-      <div class="title">登录</div>
-
-      <ul class="inputList">
-        <li class="listItem">
-          <div class="itemTitle">账号:</div>
+      <div class="title">登&nbsp;&nbsp;录</div>
+      <el-form :model="form" status-icon :rules="rules" ref="form" label-position="right" label-width="80px" class="inputList">
+        <el-form-item label="账号" prop="userID" class="listItem">
           <el-input
-            class="itemText"
-            v-model="userID"
+            size="large"
+            v-model="form.userID"
             placeholder="请输入账号"
           ></el-input>
-        </li>
-        <li class="listItem">
-          <div class="itemTitle">密码:</div>
+        </el-form-item>
+        <el-form-item label="密码" prop="userPW" class="listItem">
           <el-input
-            class="itemText"
-            v-model="userPW"
+            size="large"
+            v-model="form.userPW"
             placeholder="请输入密码"
             show-password
           ></el-input>
-        </li>
-        <li class="listItem">
-          <div class="itemTitle">验证码:</div>
-          <el-input
-            class="itemText"
-            v-model="userCC"
-            placeholder="请输入验证码"
-          ></el-input>
-        </li>
-        <li class="imageItem">
-          <img :src="kaptcha + '1'" alt="" @click="refreshKaptcha" />
-        </li>
-      </ul>
-      <div class="btnBox">
-        <el-button class="loginButton" type="primary" @click="loginCLick"
-          >立即登录</el-button
-        >
-        <el-button class="forgetButton" type="primary" @click="forgetPWClick"
-          >忘记密码</el-button
-        >
-      </div>
+        </el-form-item>
+        <el-form-item label="验证码" prop="userCC" class="listItem">
+          <div class="listItem_ccode">
+            <el-input
+                size="large"
+                class="itemText_ccode"
+                v-model="form.userCC"
+                placeholder="请输入验证码"
+              ></el-input>
+            <div class="imageItem">
+              <img :src="kaptcha + '1'" alt="" @click="refreshKaptcha" />
+            </div>
+          </div>
+        </el-form-item>
+        <el-form-item>
+          <div class="btnBox">
+            <el-button class="btnItem" type="primary" @click="loginCLick">立即登录</el-button>
+            <el-button class="btnItem" type="primary" @click="forgetPWClick">忘记密码</el-button>
+          </div>
+        </el-form-item>
+      </el-form>
+
     </div>
   </div>
 </template>
@@ -57,11 +55,47 @@ export default {
   components: {},
   props: {},
   data() {
+    var validateID = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入账号"));
+      } else if(String(value).trim() === "") {
+        callback(new Error("请输入有效的账号"));
+      } else{
+        callback();
+      }
+    };
+    var validatePW = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入密码"));
+      } else {
+        callback();
+      }
+    };
+    var validateCC = (rule, value, callback) => {
+      if(value === "") {
+        callback(new Error("请输入验证码"));
+      }else {
+        callback();
+      }
+    };
     return {
-      userID: "wcj",
-      userPW: "123",
-      userCC: "", //check code 验证码
-      kaptcha: ""
+      form: {
+        userID: "wcj",
+        userPW: "",
+        userCC: "", //check code 验证码
+      },
+      rules: {
+        userID: [
+          { validator: validateID, trigger: "blur" }
+        ],
+        userPW: [
+          { validator: validatePW, trigger: "blur" }
+        ],
+        userCC: [
+          { validator: validateCC, trigger: "blur"}
+        ]
+      },
+      kaptcha: "",
     };
   },
   watch: {},
@@ -75,9 +109,9 @@ export default {
     // 包括向服务器请求该账号对应的id相关的信息
     loginCLick() {
       let data = {
-        username: this.userID,
-        password: this.userPW,
-        code: this.userCC
+        username: this.form.userID,
+        password: this.form.userPW,
+        code: this.form.userCC
       };
       checkLoginData(data).then(res => {
         console.log(res);
@@ -108,7 +142,7 @@ export default {
           this.$message({
             message: res.passwordMsg + " 请重新输入!",
             type: "error"
-          });
+          }); 
         }
       });
     },
@@ -132,19 +166,17 @@ export default {
 .register {
   min-height: 780px;
   width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 .box {
+  margin: 100px auto;
   display: flex;
-  width: 700px;
-  height: 400px;
-  background: white;
+  width: 400px;
+  background: rgba(255, 255, 255, .8);
   list-style: none;
   flex-direction: column;
   align-items: center;
   border-radius: 20px;
+  box-shadow: 0 0 2px 6px rgba(240, 238, 238, 0.4);
 }
 .title {
   font-size: 30px;
@@ -152,49 +184,41 @@ export default {
   margin: 20px;
 }
 .inputList {
-  width: 600px;
-  height: 200px;
-  /* background: pink; */
+  width: 350px;
   padding: 0;
-  list-style: none;
+}
+.box /deep/ .el-input__inner:focus{
+  border-color: var(--main-color);
 }
 .listItem {
+  margin-bottom: 25px;
+}
+.listItem_ccode {
   display: flex;
-  margin-bottom: 20px;
-  flex-direction: row;
-  justify-content: center;
-  align-content: center;
 }
-.itemTitle {
-  flex: 3;
-  text-align: right;
-  padding-right: 20px;
-  font-size: 16px;
-  line-height: 32px;
-}
-.itemText {
-  flex: 10;
+.itemText_ccode {
+  flex: 1;
 }
 .imageItem {
+  flex: 1;
+}
+.imageItem img {
   float: right;
+  cursor: pointer;
 }
 .btnBox {
   display: flex;
   justify-content: space-around;
+  margin: 10px 0 20px -80px;
 }
-.btnBox span {
-  flex: 3;
-}
-.btnBox el-button {
-  flex: 10;
-}
-.btnBox .loginButton {
-  flex: 10;
-  margin-right: 50px;
-}
-.btnBox .forgetButton {
-  flex: 10;
-  /* margin-right: 20px; */
+
+.btnBox .btnItem {
+  background-color: var(--main-color);
+  outline: none;
+  border: none;
+} 
+.btnBox .btnItem:hover {
+  opacity: .8;
 }
 </style>
 <style></style>
