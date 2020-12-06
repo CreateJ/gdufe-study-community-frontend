@@ -1,47 +1,55 @@
 <template>
   <div class="register">
     <div class="box">
-      <div class="title">注册</div>
-      <ul class="inputList">
-        <li class="listItem">
-          <div class="itemTitle">账号:</div>
+      <div class="title">注&nbsp;&nbsp;册</div>
+      <el-form
+        :model="form"
+        status-icon
+        :rules="rules"
+        ref="form"
+        label-position="right"
+        label-width="80px"
+        class="inputList"
+      >
+        <el-form-item label="账号" prop="userID" class="listItem">
           <el-input
-            class="itemText"
-            v-model="userID"
+            size="large"
+            v-model="form.userID"
             placeholder="请输入账号"
           ></el-input>
-        </li>
-        <li class="listItem">
-          <div class="itemTitle">密码:</div>
+        </el-form-item>
+        <el-form-item label="密码" prop="userPW" class="listItem">
           <el-input
-            class="itemText"
-            v-model="userPW"
+            size="large"
+            v-model="form.userPW"
             placeholder="请输入密码"
             show-password
           ></el-input>
-        </li>
-        <li class="listItem">
-          <div class="itemTitle">确认密码:</div>
+        </el-form-item>
+        <el-form-item label="确认密码" prop="userRW" class="listItem">
           <el-input
-            class="itemText"
-            v-model="userRW"
-            placeholder="请再次输入密码确认"
+            size="large"
+            v-model="form.userRW"
+            placeholder="请确认密码"
             show-password
           ></el-input>
-        </li>
-        <li class="listItem">
-          <div class="itemTitle">邮箱:</div>
+        </el-form-item>
+        <el-form-item label="邮箱" prop="userEM" class="listItem">
           <el-input
-            class="itemText"
-            v-model="userEM"
+            size="large"
+            v-model="form.userEM"
+            type="email"
             placeholder="请输入邮箱"
           ></el-input>
-        </li>
-      </ul>
-      <div class="btnBox">
-        <span></span>
-        <el-button type="primary" @click="sendRegister">立即注册</el-button>
-      </div>
+        </el-form-item>
+        <el-form-item>
+          <div class="btnBox">
+            <el-button class="btnItem" type="primary" @click="registerCLick"
+              >立即注册</el-button
+            >
+          </div>
+        </el-form-item>
+      </el-form>
     </div>
   </div>
 </template>
@@ -52,44 +60,91 @@ export default {
   components: {},
   props: {},
   data() {
+    var validateID = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入账号"));
+      } else if (
+        String(value).trim() === "" ||
+        value.length < 6 ||
+        value.length > 18
+      ) {
+        callback(new Error("请输入有效的账号"));
+      } else {
+        callback();
+      }
+    };
+    var validatePW = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入密码"));
+      } else {
+        if (this.form.userRW !== "") {
+          this.$refs.form.validateField("userRW");
+        }
+        callback();
+      }
+    };
+    var validateRW = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请再次确认密码"));
+      } else if (value !== this.form.userPW) {
+        callback(new Error("两次输入密码不一致"));
+      } else {
+        callback();
+      }
+    };
+    var validateEM = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入邮箱"));
+      } else if (String(value).indexOf("@") === -1) {
+        callback(new Error("请确保邮箱格式正确"));
+      } else {
+        callback();
+      }
+    };
     return {
-      userID: "",
-      userPW: "",
-      userRW: "",
-      userEM: "",
+      form: {
+        userID: "",
+        userPW: "",
+        userRW: "",
+        userEM: "",
+      },
+      rules: {
+        userID: [{ validator: validateID, trigger: "blur" }],
+        userPW: [{ validator: validatePW, trigger: "blur" }],
+        userRW: [{ validator: validateRW, trigger: "blur" }],
+        userEM: [{ validator: validateEM, trigger: "blur" }],
+      },
     };
   },
   watch: {},
   computed: {},
   methods: {
-    sendRegister(){
-      console.log(this.userID);
-      console.log(this.userPW);
-      console.log(this.userRW);
-      console.log(this.userEM);
-    }
+    registerCLick() {
+      this.$refs.form.validate((valid) => {
+        if (!valid) return false;
+
+        console.log(this.form.userID + "注册成功！");
+      });
+    },
   },
   created() {},
-  mounted() {}
+  mounted() {},
 };
 </script>
 <style scoped>
 .register {
-  min-height: 780px;
   width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 .box {
+  margin: 100px auto;
   display: flex;
-  width: 700px;
-  height: 400px;
-  background: white;
+  width: 400px;
+  background: rgba(255, 255, 255, 0.8);
   list-style: none;
   flex-direction: column;
   align-items: center;
   border-radius: 20px;
+  box-shadow: 0 0 2px 6px rgba(240, 238, 238, 0.4);
 }
 .title {
   font-size: 30px;
@@ -97,36 +152,28 @@ export default {
   margin: 20px;
 }
 .inputList {
-  width: 600px;
-  height: 200px;
-  /* background: pink; */
+  width: 350px;
   padding: 0;
-  list-style: none;
+}
+.box /deep/ .el-input__inner:focus {
+  border-color: var(--main-color);
 }
 .listItem {
-  display: flex;
-  margin-bottom: 20px;
-  flex-direction: row;
-  justify-content: center;
-  align-content: center;
-}
-.itemTitle {
-  flex: 3;
-  text-align: right;
-  padding-right: 20px;
-  font-size: 16px;
-  line-height: 32px;
-}
-.itemText {
-  flex: 10;
+  margin-bottom: 25px;
 }
 .btnBox {
   display: flex;
+  justify-content: space-around;
+  margin: 10px 0 20px -80px;
 }
-.btnBox span {
-  flex: 3;
+
+.btnBox .btnItem {
+  background-color: var(--main-color);
+  outline: none;
+  border: none;
 }
-.btnBox el-button {
-  flex: 10;
+.btnBox .btnItem:hover {
+  opacity: 0.8;
 }
 </style>
+<style></style>
