@@ -26,12 +26,12 @@ export default {
 <style scoped>
 .helloBox {
   /* height: 150px; */
+  color: #A2A7A7;
   text-align: center;
+  padding-top: 15px;
   padding-bottom: 15px;
 }
-.title {
-  margin-bottom: 5px
-}
+
 .helloText {
   margin: 8px;
   font-size: 15px;
