@@ -45,4 +45,8 @@ export default {
   mounted() {}
 };
 </script>
-<style scoped></style>
+<style scoped>
+.el-dropdown-menu__item:hover {
+  color: var(--main-color);
+}
+</style>

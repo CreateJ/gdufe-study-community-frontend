@@ -1,10 +1,8 @@
 <template>
-  <el-footer>
-    <div class="footerBox">
-      粤ICP备19066467号<br />
-      Copyright © 2020 霜雪千年
-    </div>
-  </el-footer>
+  <div class="footerBox">
+    粤ICP备19066467号<br />
+    Copyright © 2020 霜雪千年
+  </div>
 </template>
 
 <script>
@@ -24,7 +22,7 @@ export default {
 </script>
 <style scoped>
 .footerBox {
-  margin: 15px;
+  padding: 10px 0;
   text-align: center;
   color: #eee;
   font-size: 14px;

@@ -1,64 +1,60 @@
 <template>
-  <el-menu
-    :default-active="activeIndex"
-    class="el-menu-demo"
-    mode="horizontal"
-    @select="handleSelect"
-    active-text-color="#eeeeee"
-    router
-  >
-    <ul class="menu_list float_left" @click="LinkTo('/home')">
-      <li>
-        <i class="el-icon-school site_icon"></i>
-      </li>
-      <li>
-        GDUFE&nbsp;COMMUNITY&nbsp;
-      </li>
-    </ul>
+  <el-row>
+    <el-col 
+      :xs="{ span: 6, offset: 1 }" 
+      :sm="{ span: 6, offset: 1 }"
+      :md="{ span: 6, offset: 2 }">
+      <ul class="logo_list" @click="LinkTo('/home')">
+        <li>
+          <i class="el-icon-school site_icon"></i>
+        </li>
+        <li>GDUFE&nbsp;COMMUNITY&nbsp;</li>
+      </ul>
+    </el-col>
+    <el-col 
+      :xs=16
+      :sm=16
+      :md=14
+      class="menu_list">
+      <el-input placeholder="快来挖掘宝藏吧！" v-model="searchInput" class="input">
+        <el-button slot="append" icon="el-icon-search" @click="searchCLick" class="search_btn"></el-button>
+      </el-input>
 
-    <ul class="menu_list float_right">
-      <li>
-        <el-input class="searchInput" placeholder="快来挖掘宝藏吧！"></el-input>
-      </li>
-      <li>
-        <el-button class="searchBtn" type="primary" icon="el-icon-search" plain
-          >搜索</el-button
-        >
-      </li>
-      <li v-show="!$store.state.isLogin">
-        <el-menu-item index="/login">登录</el-menu-item>
-      </li>
-      <li v-show="!$store.state.isLogin">
-        <el-menu-item index="/register">注册</el-menu-item>
-      </li>
-      <li v-show="$store.state.isLogin">
-        <el-menu-item index="/test">测试</el-menu-item>
-      </li>
-      <li v-show="$store.state.isLogin">
-        <el-menu-item index="/home">首页</el-menu-item>
-      </li>
-      <li v-show="$store.state.isLogin">
-        <el-menu-item index="/message">消息</el-menu-item>
-      </li>
-      <li v-show="$store.state.isLogin">
-        <el-submenu index="2">
-          <template class="navUserName" slot="title">{{
+      <el-menu
+        :default-active="activeIndex"
+        text-color="#fff"
+        active-text-color="#eee"
+        background-color="#4CB7D5"
+        class="el-menu-demo"
+        mode="horizontal"
+        @select="handleSelect"
+        router
+      >
+        <el-menu-item index="/login" v-show="!$store.state.isLogin">登录</el-menu-item>
+        <el-menu-item index="/register" v-show="!$store.state.isLogin">注册</el-menu-item>
+        <el-menu-item index="/test" v-show="$store.state.isLogin">测试</el-menu-item>
+        <el-menu-item index="/home" v-show="$store.state.isLogin">首页</el-menu-item>
+        <el-menu-item index="/message" v-show="$store.state.isLogin">消息</el-menu-item>
+        <el-submenu index="2" v-show="$store.state.isLogin">
+          <template slot="title">{{
             $store.state.userName
           }}</template>
-          <el-menu-item index="/personal">个人空间</el-menu-item>
-          <el-menu-item index="/info">修改信息</el-menu-item>
+          <el-menu-item index="/personal"><i class="el-icon-user icon_profile"></i>个人空间</el-menu-item>
+          <el-menu-item index="/info"><i class="el-icon-edit icon_profile"></i>修改信息</el-menu-item>
           <!-- 点击退出登录将直接跳转到home，恢复至未登录状态 -->
-          <el-menu-item index="/home" @click="logout">退出登录</el-menu-item>
+          <el-menu-item index="/home" @click="logout"
+            ><i class="el-icon-switch-button icon_profile"></i>退出登录</el-menu-item
+          >
         </el-submenu>
-      </li>
-    </ul>
-  </el-menu>
+      </el-menu>
+    </el-col>
+  </el-row>
 </template>
 
 <script>
-import { LinkTo } from "@/assets/utils/baseUtil"
-import { clearLoingCookie } from "@/plugins/vue-cookies.js"
-import { LGOT } from "@/store/mutations-types"
+import { LinkTo } from "@/assets/utils/baseUtil";
+import { clearLoingCookie } from "@/plugins/vue-cookies.js";
+import { LGOT } from "@/store/mutations-types";
 export default {
   name: "vueFooter",
   components: {},
@@ -66,7 +62,8 @@ export default {
   data() {
     return {
       activeIndex: "1",
-      activeIndex2: "1"
+      activeIndex2: "1",
+      searchInput: ""
     };
   },
   watch: {},
@@ -76,72 +73,88 @@ export default {
       console.log(key, keyPath);
     },
     LinkTo,
-    logout(){
+    logout() {
       clearLoingCookie();
-      this.$store.commit( LGOT )
+      this.$store.commit(LGOT);
+    },
+    searchCLick(){
+      console.log("正在进行搜索");
     }
   },
   created() {},
-  mounted() {}
+  mounted() {},
 };
 </script>
 <style scoped>
 .el-menu-demo {
-  background-color: transparent;
   border: none;
-  /* padding-left: 60px; */
+} 
+.logo_list, .menu_list {
+  display: flex;
+  align-items: center;
+  height: 60px;
 }
-.menu_list {
-  list-style: none;
-  padding-left: 0;
-  outline: none;
+.logo_list li, .menu_list li {
+  color: #fff;
   cursor: pointer;
 }
-.menu_list li {
-  color: #eee;
-  font-size: 18px;
-  display: inline-block;
-  height: 60px;
-  line-height: 60px;
-  position: relative;
-  /* top: 1px; */
+.logo_list li {
+  font-size: 20px;
 }
-
+.menu_list {
+  justify-content: flex-end;
+}
+.menu_list li {
+  font-size: 16px;
+}
+.input {
+  width: 250px;
+  margin-right: 20px;
+}
+.search_btn:hover {
+  color: #ccc;
+}
 .site_icon {
-  font-size: 30px;
-  line-height: 50px;
+  font-size: 26px;
   color: #eee;
-  position: relative;
-  top: 6px;
+  padding-right:10px;
+}
+.icon_profile {
+  font-size: 16px;
+  color: #fff;
+  vertical-align: middle;
+}
+.el-menu-demo /deep/ .el-submenu__icon-arrow {
+  color: #fff;
 }
 </style>
 
 <style>
-.el-submenu__title {
-  color: #eee;
-  font-size: 18px;
+.el-input__inner:focus {
+  border: 1px solid var(--main-color);
 }
+.el-submenu__title {
+  font-size: 16px;
+  border: none !important;
+} 
 .el-submenu {
   position: relative;
   top: -1px;
 }
-.is-opened > .el-submenu__title {
-  color: white;
-  background: rgba(255, 255, 255, 0.2);
+.el-submenu__title:hover {
+  color: #eee !important;
+  background-color: transparent !important;
 }
+.el-menu-item {
+  /* width: 10px; */
+  border: none !important;
+}
+.el-menu-item:hover,
 .el-menu-item:active,
-.el-menu-item:focus,
-.el-menu-item:hover {
-  background: rgba(255, 255, 255, 0.2);
-  color: white !important;
+.el-menu-item:focus {
+  color: #eee !important;
+  background-color: transparent !important;
+  border: none !important;
 }
-.searchInput {
-  border: 0;
-}
-.searchBtn {
-  height: 32px;
-}
-.searchBtn:hover {
-  outline: white 1px solid;
-}
+
 </style>

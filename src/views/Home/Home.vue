@@ -1,7 +1,7 @@
 <template>
   <div id="home">
     <el-row class="helloBox">
-      <el-col :span="16" :offset="4">
+      <el-col>
         <hello></hello>
       </el-col>
     </el-row>
@@ -86,8 +86,6 @@ export default {
 <style scoped>
 #home {
   width: 100%;
-  min-height: 780px;
-  /* padding: 0 20px */
 }
 .postBox {
   background: #f6f6f6;
@@ -105,5 +103,9 @@ export default {
 .LoadMore {
   width: 100px;
   margin: 20px 0 20px 200px;
+}
+.el-button--primary {
+  background-color: var(--main-color);
+  border: 1px solid var(--main-color);
 }
 </style>

@@ -2,7 +2,15 @@
   <div class="register">
     <div class="box">
       <div class="title">登&nbsp;&nbsp;录</div>
-      <el-form :model="form" status-icon :rules="rules" ref="form" label-position="right" label-width="80px" class="inputList">
+      <el-form
+        :model="form"
+        status-icon
+        :rules="rules"
+        ref="form"
+        label-position="right"
+        label-width="80px"
+        class="inputList"
+      >
         <el-form-item label="账号" prop="userID" class="listItem">
           <el-input
             size="large"
@@ -21,11 +29,11 @@
         <el-form-item label="验证码" prop="userCC" class="listItem">
           <div class="listItem_ccode">
             <el-input
-                size="large"
-                class="itemText_ccode"
-                v-model="form.userCC"
-                placeholder="请输入验证码"
-              ></el-input>
+              size="large"
+              class="itemText_ccode"
+              v-model="form.userCC"
+              placeholder="请输入验证码"
+            ></el-input>
             <div class="imageItem">
               <img :src="kaptcha + '1'" alt="" @click="refreshKaptcha" />
             </div>
@@ -33,22 +41,25 @@
         </el-form-item>
         <el-form-item>
           <div class="btnBox">
-            <el-button class="btnItem" type="primary" @click="loginCLick">立即登录</el-button>
-            <el-button class="btnItem" type="primary" @click="forgetPWClick">忘记密码</el-button>
+            <el-button class="btnItem" type="primary" @click="loginCLick"
+              >立即登录</el-button
+            >
+            <el-button class="btnItem" type="primary" @click="forgetPWClick"
+              >忘记密码</el-button
+            >
           </div>
         </el-form-item>
       </el-form>
-
     </div>
   </div>
 </template>
 
 <script>
-import { LinkTo } from "@/assets/utils/baseUtil"
+import { LinkTo } from "@/assets/utils/baseUtil";
 import { getKaptcha, checkLoginData } from "@/network/login";
-import { LGSC } from "@/store/mutations-types"
-import { ITLG } from "@/store/actions-types"
-import { setLoginCookie, clearLoingCookie } from "@/plugins/vue-cookies"
+import { LGSC } from "@/store/mutations-types";
+import { ITLG } from "@/store/actions-types";
+import { setLoginCookie, clearLoingCookie } from "@/plugins/vue-cookies";
 import axios from "axios";
 export default {
   name: "",
@@ -58,9 +69,9 @@ export default {
     var validateID = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("请输入账号"));
-      } else if(String(value).trim() === "") {
+      } else if (String(value).trim() === "") {
         callback(new Error("请输入有效的账号"));
-      } else{
+      } else {
         callback();
       }
     };
@@ -72,28 +83,22 @@ export default {
       }
     };
     var validateCC = (rule, value, callback) => {
-      if(value === "") {
+      if (value === "") {
         callback(new Error("请输入验证码"));
-      }else {
+      } else {
         callback();
       }
     };
     return {
       form: {
-        userID: "wcj",
+        userID: "",
         userPW: "",
         userCC: "", //check code 验证码
       },
       rules: {
-        userID: [
-          { validator: validateID, trigger: "blur" }
-        ],
-        userPW: [
-          { validator: validatePW, trigger: "blur" }
-        ],
-        userCC: [
-          { validator: validateCC, trigger: "blur"}
-        ]
+        userID: [{ validator: validateID, trigger: "blur" }],
+        userPW: [{ validator: validatePW, trigger: "blur" }],
+        userCC: [{ validator: validateCC, trigger: "blur" }],
       },
       kaptcha: "",
     };
@@ -108,42 +113,54 @@ export default {
     // 根据服务器返回的信息进行相应的提示以及初始化登录状态操作，
     // 包括向服务器请求该账号对应的id相关的信息
     loginCLick() {
-      let data = {
-        username: this.form.userID,
-        password: this.form.userPW,
-        code: this.form.userCC
-      };
-      checkLoginData(data).then(res => {
-        console.log(res);
-        if (res.code == "200") {
-          this.$message({
-            message: "登录成功，即将跳转",
-            type: "success"
-          });
-          setTimeout(()=>{
-            // LGSC将store中的isLogin切换为true表示已登录
-            // 延时跳转
-            this.$store.commit(LGSC);
-            this.$store.dispatch(ITLG,{userId:res.msg});
-            // 将登录id保存到cookie中，设置过期时间为1d，后续可以在plugin/vue-cookies中修改
-            setLoginCookie(res.msg);
-            this.LinkTo('/home','replace')
-          },2000)
-        } else if (res.code == "2006") {
-          // 刷新化验证码
-          this.refreshKaptcha();
-          this.$message({
-            message: res.msg + " 请重新输入!",
-            type: "error"
-          });
-        } else if (res.code == "2007") {
-          // 刷新化验证码
-          this.refreshKaptcha();
-          this.$message({
-            message: res.passwordMsg + " 请重新输入!",
-            type: "error"
-          }); 
-        }
+      this.$refs.form.validate((valid) => {
+        // 验证不通过，不向服务发送验证请求
+        if (!valid) return false;
+        
+        let data = {
+          username: this.form.userID,
+          password: this.form.userPW,
+          code: this.form.userCC,
+        };
+        checkLoginData(data).then((res) => {
+          console.log(res);
+          if (res.code == "200") {
+            this.$message({
+              message: "登录成功，即将跳转",
+              type: "success",
+            });
+            setTimeout(() => {
+              // LGSC将store中的isLogin切换为true表示已登录
+              // 延时跳转
+              this.$store.commit(LGSC);
+              this.$store.dispatch(ITLG, { userId: res.msg });
+              // 将登录id保存到cookie中，设置过期时间为1d，后续可以在plugin/vue-cookies中修改
+              setLoginCookie(res.msg);
+              this.LinkTo("/home", "replace");
+            }, 2000);
+          } else if (res.code == "2006") {
+            // 刷新化验证码
+            this.refreshKaptcha();
+            this.$message({
+              message: res.msg + " 请重新输入!",
+              type: "error",
+            });
+          } else if (res.code == "2007") {
+            // 刷新化验证码
+            this.refreshKaptcha();
+            this.$message({
+              message: res.passwordMsg + " 请重新输入!",
+              type: "error",
+            });
+          } else if(res.code == "500") {
+            console.log("500");
+            this.refreshKaptcha();
+            this.$message({
+              message: res.msg + " 服务器异常！请稍后再试！",
+              type: "error",
+            });
+          }
+        });
       });
     },
     // 公共跳转方法
@@ -159,19 +176,18 @@ export default {
     // 初始化验证码
     this.refreshKaptcha();
   },
-  mounted() {}
+  mounted() {},
 };
 </script>
 <style scoped>
 .register {
-  min-height: 780px;
   width: 100%;
 }
 .box {
-  margin: 100px auto;
+  margin: 100px auto 0;
   display: flex;
   width: 400px;
-  background: rgba(255, 255, 255, .8);
+  background: rgba(255, 255, 255, 0.8);
   list-style: none;
   flex-direction: column;
   align-items: center;
@@ -187,7 +203,7 @@ export default {
   width: 350px;
   padding: 0;
 }
-.box /deep/ .el-input__inner:focus{
+.box /deep/ .el-input__inner:focus {
   border-color: var(--main-color);
 }
 .listItem {
@@ -216,9 +232,9 @@ export default {
   background-color: var(--main-color);
   outline: none;
   border: none;
-} 
+}
 .btnBox .btnItem:hover {
-  opacity: .8;
+  opacity: 0.8;
 }
 </style>
 <style></style>

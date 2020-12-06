@@ -1,36 +1,19 @@
 <template>
   <div id="app">
-    <!-- 头部 -->
-    <el-row class="topNav">
-      <el-col :span="16" :offset="4">
-        <el-container>
-          <el-header>
-            <vue-header></vue-header>
-          </el-header>
-        </el-container>
-      </el-col>
-    </el-row>
-
-    <!-- 路由切换 -->
-    <el-row>
-      <!-- <el-col :span="16" :offset="4">
-        <el-container>
-          <router-view></router-view>
-        </el-container>
-      </el-col> -->
-      <router-view v-if="isRouterAlive"></router-view>
-    </el-row>
-
-    <!-- 页尾 -->
-    <el-row class="bottomFooter">
-      <el-col :span="16" :offset="4">
-        <el-container>
-          <el-footer>
-            <vue-footer></vue-footer>
-          </el-footer>
-        </el-container>
-      </el-col>
-    </el-row>
+    <el-container class="outerWrap">
+      <!-- 头部 -->
+      <el-header class="topNav">
+        <vue-header></vue-header>
+      </el-header>
+      <!-- 路由切换 -->
+      <el-main class="centerMain">
+        <router-view v-if="isRouterAlive"></router-view>
+      </el-main>
+      <!-- 页尾 -->
+      <el-footer class="bottomFooter">
+        <vue-footer></vue-footer>
+      </el-footer>
+    </el-container>
     <vue-drawer></vue-drawer>
   </div>
 </template>
@@ -94,15 +77,23 @@ export default {
 <style scoped>
 @import "./assets/css/base.css";
 #app {
-  min-height: max-content;
+  height: 100%;
+}
+.outerWrap {
+  min-height: 100%;
 }
 .topNav {
+  /* position: fixed;
+  left: 0;
+  top: 0; */
+  width: 100%;
   background-color: var(--main-color);
-  background-image: linear-gradient(to right, #80d0c7 0%, #0093e9 100%);
+  background-image: linear-gradient(to right, #80d0c7 0%, #41B2D8 100%);
+  z-index: 999;
 }
+
 .bottomFooter {
-  padding: 15px 0;
   background-color: var(--main-color);
-  background-image: linear-gradient(to right, #80d0c7 0%, #0093e9 100%);
+  background-image: linear-gradient(to right, #80d0c7 0%, #41B2D8 100%);
 }
 </style>
