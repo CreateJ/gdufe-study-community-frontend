@@ -1,14 +1,26 @@
 :root {
-  --main-color: #0093E9;
+  /* --main-color: #0093E9; */
+  --main-color: #44B4D7;
   --backgound-color-grey: #EEEDED;
 }
-
+html {
+  min-width: 920px;
+}
 body {
   margin: 0;
   padding: 0;
-  min-height: 900px;
   background-color: var(--backgound-color-grey);
-  /* background-color: #fff; */
+}
+html, body {
+  height: 100%;
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 .float_left{
@@ -18,7 +30,26 @@ body {
 .float_right {
   float: right;
 }
+
 ul {
   list-style: none;
   padding: 0;
+}
+
+a {
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.clearfix::after {
+  clear: both;
+  content: '';
+  display: block;
+  width: 0;
+  height: 0;
+  visibility: hidden;
+}
+
+.clearfix {
+  zoom: 1;
 }
