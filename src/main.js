@@ -7,7 +7,8 @@ import store from './store';
 import "./plugins/element.js";
 
 Vue.config.productionTip = false;
-
+// 事件总线
+Vue.prototype.$bus = new Vue();
 
 /* eslint-disable no-new */
 new Vue({
@@ -24,4 +25,7 @@ require('./assets/css/base.css');
 // qs 插件
 import qs from 'qs'
 Vue.prototype.$qs=qs
+
+import xss from "xss"
+Vue.prototype.$xss = new xss.FilterXSS();
 

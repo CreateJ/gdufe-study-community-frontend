@@ -14,14 +14,13 @@
         <vue-footer></vue-footer>
       </el-footer>
     </el-container>
-    <vue-drawer></vue-drawer>
   </div>
 </template>
 
 <script>
 import vueHeader from "@/components/vueHeader/vueHeader";
 import vueFooter from "@/components/vueFooter/vueFooter";
-import vueDrawer from "@/components/drawer/drawer";
+
 import { LinkTo } from "@/assets/utils/baseUtil"
 import { LGSC } from "@/store/mutations-types"
 import { ITLG } from "@/store/actions-types"
@@ -31,7 +30,6 @@ export default {
   components: {
     vueHeader,
     vueFooter,
-    vueDrawer
   },
   props: {},
   data() {

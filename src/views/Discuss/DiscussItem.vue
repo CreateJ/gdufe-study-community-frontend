@@ -8,7 +8,7 @@
     </ul>
     <div class="content">
       <slot name="contentHead"></slot>
-      <div class="detail">{{ content.content }}</div>
+      <div class="detail" v-html="content.content"></div>
     </div>
     <ul class="replyBtnBox clearfix">
       <li title="点赞">
@@ -110,11 +110,8 @@ export default {
     }
   },
   methods: {
-    checkLoginStatus() {
-      return this.$store.state.userInfo.user!==undefined;
-    },
     clickLike(entityType, entityId, entityUserId, postId) {
-      if(!this.checkLoginStatus()) {
+      if(typeof( this.$store.state.userInfo.user ) === "undefined") {
         alert("请先登录！");
         return;
       }
@@ -128,6 +125,10 @@ export default {
         });
     },
     clickReply(id, entityId, entityType) {
+      if(typeof( this.$store.state.userInfo.user ) === "undefined") {
+        alert("请先登录！");
+        return;
+      }
       this.$store.commit(OPDE);
       // 请求并更新，当前回复的用户信息，用于显示头像等
       let postId = this.$route.params.postId; // 获取当前文章id
