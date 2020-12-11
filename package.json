@@ -17,7 +17,8 @@
     "vue-cookies": "^1.7.4",
     "vue-router": "^3.0.1",
     "vuex": "^3.5.1",
-    "wangeditor": "^4.5.2"
+    "wangeditor": "^4.5.2",
+    "xss": "^1.0.8"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
