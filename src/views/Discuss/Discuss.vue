@@ -26,11 +26,14 @@
               :replyCount="replyCount"
               :likeStatus="likeStatus"
               :likeCount="likeCount"
+              :type=1
+              :postId="content.id"
             ></discuss-item>
 
             <div
               class="replyRegion"
               v-show="$store.state.userInfo.user !== undefined"
+              @click="clickReply"
             >
               <div class="saySomething">
                 <img :src="userAvatar" alt="" />
@@ -39,7 +42,7 @@
             </div>
           </el-col>
           <el-col :span="3" class="mainBox_right">
-            <button class="replyBtn_right">回复</button>
+            <button class="replyBtn_right" @click="clickReply">回复</button>
           </el-col>
         </el-row>
       </el-main>
@@ -69,7 +72,8 @@
 import { getPostAllInfo } from "@/network/discuss";
 import { AddComment } from "@/network/reply";
 import { LinkTo,refeshTo } from "@/assets/utils/baseUtil";
-import { CODE } from "@/store/mutations-types";
+import { OPDE, CODE, URRI } from "@/store/mutations-types";
+import { GRPI } from "@/store/actions-types";
 import DiscussItem from "@/views/Discuss/DiscussItem";
 import vueDrawer from "@/components/drawer/drawer";
 import Edit from "@/components/drawer/edit";
@@ -118,39 +122,50 @@ export default {
       this.$confirm("确认发送评论？")
         .then(() => {
           // 发送请求
-          // console.log(this.$store.state.replyRequestInfo);
           AddComment(this.$store.state.replyRequestInfo, comment)
             .then((res) => {
-              console.log("添加成功");
-              console.log(res);
+              this.initDiscuss();
+              this.$message.success("评论成功！")
             })
             .catch((err) => {
               console.log(err + "这个是err发的");
             })
             .finally(() => {
               this.$store.commit(CODE);
-              this.refeshTo(
-                "/discuss/" + this.$store.state.replyRequestInfo.postId,
-                "replace"
-              );
             });
         })
         .catch(() => {
-          this.refeshTo(
-            "/discuss/" + this.$store.state.replyRequestInfo.postId,
-            "replace"
-          );
+          
         });
     },
+    clickReply() {
+      scrollTo(0,1000);
+      this.$store.commit(OPDE);
+      // 请求并更新，当前回复的用户信息，用于显示头像等
+      let postId = this.$route.params.postId; // 获取当前文章id
+      let payload = {
+        userId: this.postman.id,
+      };
+      let replyRequestInfo = {
+        entityId: this.content.id,
+        entityType: 1,
+        postId,
+        targetId: this.postman.id,
+      };
+      this.$store.commit(URRI, replyRequestInfo);
+      this.$store.dispatch(GRPI, payload);
+    }
   },
   created() {
     this.initDiscuss();
   },
   mounted() {
     this.$bus.$on("clickReply", res => {
-      //console.log(res);
       this.sendReply(res);
     });
+    this.$bus.$on("refreshData", ()=> {
+      this.initDiscuss();
+    })
   },
   beforeDestory() {
     this.$bus.$off("clickReply");

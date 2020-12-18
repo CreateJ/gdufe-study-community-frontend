@@ -27,5 +27,14 @@ import qs from 'qs'
 Vue.prototype.$qs=qs
 
 import xss from "xss"
+// var options = {
+//   whiteList: {
+//     a: ["href", "title", "target"],
+//     p,
+//     h1, h2, h3, h4, h5, h6,
+//     quote,
+
+//   }
+// };
 Vue.prototype.$xss = new xss.FilterXSS();
 

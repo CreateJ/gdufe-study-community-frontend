@@ -3,7 +3,7 @@
     <ul class="userInfo">
       <li class="userHeader"><img :src="postman.headerUrl" alt="" /></li>
       <li class="userName">{{ postman.username }}</li>
-      <li class="createTime">{{ content.createTime | cutTime}}</li>
+      <li class="createTime">{{ content.createTime | cutTime }}</li>
       <li class="timeDescribe"><slot name="timeDescribe">编辑</slot></li>
     </ul>
     <div class="content">
@@ -21,11 +21,9 @@
                 : require('@/assets/images/icons/love_grey.png')
             "
             alt="heart"
-            @click="
-              clickLike(content.type, content.id, content.userId, content.id)
-            "
+            @click="clickLike(type, content.id, content.userId, postId)"
           />
-          <span class="likeCount" v-show="likeCount!=0">{{ likeCount }}</span>
+          <span class="likeCount" v-show="likeCount != 0">{{ likeCount }}</span>
         </a>
       </li>
       <li title="回复">
@@ -35,30 +33,43 @@
             clickReply(
               postman.id, //targetId
               content.id, //entityId
-              1 //entityType
+              type //entityType
             )
           "
         >
           <img class="icon" src="@/assets/images/icons/reply.png" alt="reply" />
-          <span class="replyCount" v-show="replyCount!=0">{{ replyCount }}</span>
+          <span class="replyCount" v-show="replyCount != 0">{{
+            replyCount
+          }}</span>
         </a>
       </li>
     </ul>
     <div v-for="(item, index) in replies" :key="index">
-      <discuss-item 
+      <discuss-item
         :postman="item.user"
         :content="item.comment"
         :replies="item.replies"
         :replyCount="item.replyCount"
         :likeStatus="item.likeStatus"
         :likeCount="item.likeCount"
+        :type="2"
+        :postId="postId"
       >
         <template v-slot:timeDescribe>回复</template>
         <template v-slot:contentHead>
-          <el-tooltip class="target" effect="light" :content="content.content | replyTips" placement="top-start">
+          <el-tooltip
+            class="target"
+            effect="light"
+            :content="content.content | replyTips"
+            placement="top-start"
+          >
             <div>
-              <img class="icon" src="@/assets/images/icons/reply.png" alt="reply" />
-              <span>{{postman.username}}</span>
+              <img
+                class="icon"
+                src="@/assets/images/icons/reply.png"
+                alt="reply"
+              />
+              <span>{{ postman.username }}</span>
             </div>
           </el-tooltip>
         </template>
@@ -69,6 +80,7 @@
 
 <script>
 import { sendLike } from "@/network/discuss";
+import { LinkTo,refeshTo } from "@/assets/utils/baseUtil";
 import { OPDE, CODE, URRI } from "@/store/mutations-types";
 import { GRPI } from "@/store/actions-types";
 export default {
@@ -77,55 +89,69 @@ export default {
     postman: {
       type: Object,
       default() {
-        return {}
-      }
+        return {};
+      },
     },
     content: {
       type: Object,
       default() {
-        return {}
-      }
+        return {};
+      },
     },
     replies: {
       type: Array,
       default() {
-        return []
-      }
+        return [];
+      },
+    },
+    type: {
+      type: Number,
+      default: 1,
     },
     replyCount: 0,
     likeStatus: 0,
     likeCount: 0,
+    postId: "",
   },
   filters: {
-    replyTips(value){
+    replyTips(value) {
       return "原文：" + value;
     },
-    cutTime(value){
-      if(value !== undefined) {
-        if(value.indexOf("T")!=-1) {
+    cutTime(value) {
+      if (value !== undefined) {
+        if (value.indexOf("T") != -1) {
           return value.split("T")[0] + " " + value.split("T")[1].split(".")[0];
         }
       }
       return value;
-    }
+    },
   },
   methods: {
+    LinkTo,
+    refeshTo,
     clickLike(entityType, entityId, entityUserId, postId) {
-      if(typeof( this.$store.state.userInfo.user ) === "undefined") {
+      if (typeof this.$store.state.userInfo.user === "undefined") {
         alert("请先登录！");
         return;
       }
+      let _this = this;
       // 传入参数 entityType:实体类型;entityId:实体id;entityUserId:实体对应的用户id;postId:文章对应id;
       sendLike(entityType, entityId, entityUserId, postId)
         .then((res) => {
-          console.log(res);
+          _this.$bus.$emit("refreshData");
+          console.log("点赞成功！");
+          // _this.refeshTo(
+          //   "/discuss/" + _this.$store.state.replyRequestInfo.postId,
+          //   "replace"
+          // );
         })
         .catch((err) => {
+          console.log("点赞出错了！");
           console.log(err);
         });
     },
     clickReply(id, entityId, entityType) {
-      if(typeof( this.$store.state.userInfo.user ) === "undefined") {
+      if (typeof this.$store.state.userInfo.user === "undefined") {
         alert("请先登录！");
         return;
       }
@@ -175,7 +201,8 @@ export default {
   font-weight: bolder;
   font-size: 16px;
 }
-.createTime, .timeDescribe {
+.createTime,
+.timeDescribe {
   font-size: 14px;
   color: rgba(0, 0, 0, 0.5);
 }

@@ -1,7 +1,11 @@
 <template>
   <div id="personal">
     <el-row class="personalBox">
-      <el-col :span="16" :offset="4">
+      <el-col
+        :xs="{ span: 22, offset: 1 }"
+        :sm="{ span: 22, offset: 1 }"
+        :md="{ span: 20, offset: 2 }"
+      >
         <div class="simpleInfo pd20">
           <img class="userHeader" :src="userHeaderUrl" alt="" />
           <ul class="namelist">
@@ -13,12 +17,36 @@
       </el-col>
     </el-row>
     <el-row>
-      <el-col :span="16" :offset="4">
+      <el-col
+        :xs="{ span: 22, offset: 1 }"
+        :sm="{ span: 22, offset: 1 }"
+        :md="{ span: 20, offset: 2 }"
+      >
         <el-tabs type="border-card">
           <el-tab-pane label="我发布的帖子">我发布的帖子</el-tab-pane>
           <el-tab-pane label="我回复的帖子">我回复的帖子</el-tab-pane>
-          <el-tab-pane label="我关注的人">我关注的人</el-tab-pane>
-          <el-tab-pane label="关注我的人">关注我的人</el-tab-pane>
+          <el-tab-pane label="我关注的人">
+            <p v-if="!hasFollowee">你还没有关注的人哦~</p>
+            <div v-else class="follow">
+              <follow
+                v-for="(item, index) in followee"
+                :key="index"
+                :info="item"
+                class="follow-item"
+              ></follow>
+            </div>
+          </el-tab-pane>
+          <el-tab-pane label="关注我的人">
+            <p v-if="!hasFollower">还没有人关注你哦~</p>
+            <div v-else class="follow">
+              <follow
+                v-for="(item, index) in follower"
+                :key="index"
+                :info="item"
+                class="follow-item"
+              ></follow>
+            </div>
+          </el-tab-pane>
         </el-tabs>
       </el-col>
     </el-row>
@@ -26,33 +54,53 @@
 </template>
 
 <script>
+import { showFollowee, showFollower } from "@/network/personal";
+import Follow from "./follow";
 export default {
   name: "",
-  components: {},
+  components: {
+    Follow,
+  },
   props: {},
   data() {
     return {
       userHeaderUrl: "",
       userName: "",
-      userCreateTime: ""
+      userCreateTime: "",
+      followee: [],
+      follower: [],
+      hasFollowee: false,
+      hasFollower: false,
     };
   },
   watch: {},
   computed: {},
-  methods: {},
-  created() {
-    this.userHeaderUrl = this.$store.state.userInfo.user.headerUrl;
-    this.userName = this.$store.state.userInfo.user.username;
-    this.userCreateTime = this.$store.state.userInfo.user.createTime.split(
-      "T"
-    )[0];
+  methods: {
+    initUserInfo() {
+      this.userHeaderUrl = this.$store.state.userInfo.user.headerUrl;
+      this.userName = this.$store.state.userInfo.user.username;
+      this.userCreateTime = this.$store.state.userInfo.user.createTime.split(
+        "T"
+      )[0];
+      showFollowee(this.$store.state.userInfo.user.id).then(res => {
+        this.followee = res.users;
+        this.hasFollowee = this.followee.length != 0;
+      });
+      showFollower(this.$store.state.userInfo.user.id).then(res => {
+        this.follower = res.users; 
+        this.hasFollower = this.follower.length != 0;   
+      });
+    },
   },
-  mounted() {}
+  created() {
+    this.initUserInfo();
+  },
+  mounted() {},
 };
 </script>
 <style scoped>
 .pd20 {
-  padding: 0 20px；;
+  padding: 0 20px;
 }
 #personal {
   width: 100%;
@@ -62,7 +110,7 @@ export default {
 .personalBox {
   height: 135px;
   background-color: var(--main-color);
-  background-image: linear-gradient(to right, #80d0c7 0%, #0093e9 100%);
+  background-image: linear-gradient(to right, #80d0c7 0%, #41b2d8 100%);
 }
 .userHeader {
   display: inline-block;
@@ -88,5 +136,13 @@ export default {
 }
 .userIntroduction {
   color: rgba(255, 255, 255, 0.8);
+}
+.follow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.follow-item {
+  padding: 10px;
 }
 </style>
