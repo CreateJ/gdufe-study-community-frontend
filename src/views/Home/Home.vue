@@ -6,7 +6,27 @@
       </el-col>
     </el-row>
     <el-row class="postBox">
-      <el-col :span="3" :offset="4">这里是侧边栏</el-col>
+      <el-col :span="3" :offset="4">
+        <div class="userInfo" v-if="typeof $store.state.userInfo.user != 'undefined'">
+          <div class="avatar">
+            <img src="$store.state.userInfo.user.headerUrl" alt="头像">
+          </div>
+          <div class="aboutUser">
+            <div class="postNum">
+              <p>帖子</p>
+              <p>23</p>
+            </div>
+            <div class="followerNum">
+              <p>粉丝</p>
+              <p>100</p>
+            </div>
+            <div class="followeeNum">
+              <p>关注</p>
+              <p>57</p>
+            </div>
+          </div>
+        </div>
+      </el-col>
       <el-col :span="13">
         <dropdown @changeOrderMode="changeOrderMode"></dropdown>
         <ul class="postList">
@@ -108,4 +128,9 @@ export default {
   background-color: var(--main-color);
   border: 1px solid var(--main-color);
 }
+
+.userInfo {
+  padding: 16px;
+}
+
 </style>

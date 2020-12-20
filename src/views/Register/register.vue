@@ -55,6 +55,8 @@
 </template>
 
 <script>
+import { LinkTo } from "@/assets/utils/baseUtil";
+import { Register } from "@/network/register";
 export default {
   name: "",
   components: {},
@@ -63,12 +65,12 @@ export default {
     var validateID = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("请输入账号"));
-      } else if (
-        String(value).trim() === "" ||
-        value.length < 6 ||
-        value.length > 18
-      ) {
-        callback(new Error("请输入有效的账号"));
+        // } else if (
+        //   String(value).trim() === "" ||
+        //   value.length < 6 ||
+        //   value.length > 18
+        // ) {
+        //   callback(new Error("请输入有效的账号"));
       } else {
         callback();
       }
@@ -119,11 +121,33 @@ export default {
   watch: {},
   computed: {},
   methods: {
+    LinkTo,
     registerCLick() {
-      this.$refs.form.validate((valid) => {
+      var _this = this;
+      _this.$refs.form.validate((valid) => {
         if (!valid) return false;
-
-        console.log(this.form.userID + "注册成功！");
+        let data = {
+          username: this.form.userID,
+          password: this.form.userPW,
+          email: this.form.userEM,
+        };
+        Register(data).then((res) => {
+          console.log(res);
+          if(res.code == "200") {
+            _this.$message({
+              message: res.msg,
+              type: "success",
+            });
+            // setTimeout(() => {
+            //   _this.LinkTo("/login", "replace");
+            // }, 2000);
+          }else {
+            _this.$message({
+              message: res.usernameMsg || res.passwordMsg || res.emailMsg,
+              type: "error"
+            })
+          }
+        });
       });
     },
   },

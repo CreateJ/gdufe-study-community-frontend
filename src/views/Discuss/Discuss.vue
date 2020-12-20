@@ -128,6 +128,7 @@ export default {
               this.$message.success("评论成功！")
             })
             .catch((err) => {
+              this.$message.error("评论失败！")
               console.log(err + "这个是err发的");
             })
             .finally(() => {

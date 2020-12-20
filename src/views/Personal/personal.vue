@@ -24,7 +24,9 @@
       >
         <el-tabs type="border-card">
           <el-tab-pane label="我发布的帖子">我发布的帖子</el-tab-pane>
-          <el-tab-pane label="我回复的帖子">我回复的帖子</el-tab-pane>
+          <el-tab-pane label="我回复的帖子">
+            <my-reply-post v-for="item in 2" :key=item></my-reply-post>
+          </el-tab-pane>
           <el-tab-pane label="我关注的人">
             <p v-if="!hasFollowee">你还没有关注的人哦~</p>
             <div v-else class="follow">
@@ -56,10 +58,12 @@
 <script>
 import { showFollowee, showFollower } from "@/network/personal";
 import Follow from "./follow";
+import MyReplyPost from "./myReplyPost";
 export default {
   name: "",
   components: {
     Follow,
+    MyReplyPost,
   },
   props: {},
   data() {

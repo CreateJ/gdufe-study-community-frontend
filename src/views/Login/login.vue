@@ -149,7 +149,7 @@ export default {
             // 刷新化验证码
             this.refreshKaptcha();
             this.$message({
-              message: res.passwordMsg + " 请重新输入!",
+              message: res.passwordMsg || res.usernameMsg,
               type: "error",
             });
           } else if(res.code == "500") {

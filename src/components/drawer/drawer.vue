@@ -8,7 +8,7 @@
     size="300px"
     :show-close=true
     custom-class="drawer"
-    :before-close="handleClose"
+    :wrapperClosable=false
   >
     <slot></slot>
   </el-drawer>
@@ -36,18 +36,6 @@ export default {
   computed: {},
   methods: {
     refeshTo,
-    handleClose() {
-      this.$confirm("确认关闭？")
-        .then(() => {
-          this.$store.commit(CODE);
-          this.refeshTo("/discuss/"+this.$store.state.replyRequestInfo.postId,"replace")
-          // this.$router.replace("/discuss/"+this.$store.state.replyRequestInfo.postId)
-        })
-        .catch(_ => {
-          this.refeshTo("/discuss/"+this.$store.state.replyRequestInfo.postId,"replace")
-        });
-    },
-    
   },
   created() {},
   mounted() {}
@@ -55,6 +43,7 @@ export default {
 </script>
 <style scoped>
 .drawer {
+  position: relative;
   width: 800px;
 }
 </style>

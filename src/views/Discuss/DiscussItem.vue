@@ -80,7 +80,7 @@
 
 <script>
 import { sendLike } from "@/network/discuss";
-import { LinkTo,refeshTo } from "@/assets/utils/baseUtil";
+import { LinkTo, refeshTo } from "@/assets/utils/baseUtil";
 import { OPDE, CODE, URRI } from "@/store/mutations-types";
 import { GRPI } from "@/store/actions-types";
 export default {
@@ -113,6 +113,7 @@ export default {
     likeCount: 0,
     postId: "",
   },
+  computed: {},
   filters: {
     replyTips(value) {
       return "原文：" + value;
@@ -234,5 +235,8 @@ export default {
 .target span {
   color: #777;
   vertical-align: top;
+}
+.detail {
+  white-space: pre-wrap;
 }
 </style>
