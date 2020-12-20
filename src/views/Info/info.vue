@@ -1,9 +1,7 @@
 <template>
   <div><el-row>
     <el-col :span="16" :offset="4">
-
-      <h2>消息页面
-      </h2>
+      <h2>修改信息</h2>
     </el-col>
   </el-row></div>
 </template>

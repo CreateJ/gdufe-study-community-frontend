@@ -6,7 +6,24 @@
       </el-col>
     </el-row>
     <el-row class="postBox">
-      <el-col :span="3" :offset="4">这里是侧边栏</el-col>
+      <el-col :span="3" :offset="4">
+        <img
+          :src="userHeaderUrl"
+          alt=""
+          class="tabHeaderUrl"
+          v-if="$store.state.isLogin"
+        />
+        <div
+          class="tabHeaderUrl"
+          v-else="!$store.state.isLogin"
+          @click="LinkTo('/login')"
+        >
+          请登录
+        </div>
+        <div class="tabUserName">{{ userName }}</div>
+        <el-button type="primary" class="tabBotton">发起讨论</el-button>
+        <el-button type="primary" class="tabBotton">回到顶部</el-button>
+      </el-col>
       <el-col :span="13">
         <dropdown @changeOrderMode="changeOrderMode"></dropdown>
         <ul class="postList">
@@ -27,11 +44,12 @@
 
 <script>
 import { getIndexData, getIndexDataNew } from "@/network/home";
-import { LGSC } from "@/store/mutations-types"
-import { ITLG } from "@/store/actions-types"
+import { LGSC } from "@/store/mutations-types";
+import { ITLG } from "@/store/actions-types";
 import Hello from "@/views/Home/Hello";
 import Dropdown from "@/views/Home/Dropdown";
 import HomePost from "@/views/Home/Post";
+import { LinkTo } from "@/assets/utils/baseUtil";
 
 export default {
   name: "",
@@ -45,7 +63,9 @@ export default {
     return {
       postDatas: [],
       currentPage: 0,
-      NowOrderMode: 0 // 0代表最新 1代表最热
+      NowOrderMode: 0, // 0代表最新 1代表最热
+      userHeaderUrl: "",
+      userName: ""
     };
   },
   watch: {},
@@ -70,7 +90,7 @@ export default {
         });
       });
     },
-    
+    LinkTo
   },
   created() {
     // 获取首页文章列表
@@ -78,7 +98,8 @@ export default {
       // console.log(res);
       this.postDatas = res.discussPosts;
     });
-
+    this.userHeaderUrl = this.$store.state.userInfo.user.headerUrl;
+    this.userName = this.$store.state.userInfo.user.username;
   },
   mounted() {}
 };
@@ -107,5 +128,30 @@ export default {
 .el-button--primary {
   background-color: var(--main-color);
   border: 1px solid var(--main-color);
+}
+
+.tabBotton {
+  display: block;
+  width: 80%;
+  margin: 20px;
+}
+
+.tabHeaderUrl {
+  width: 80%;
+  margin: 20px;
+  border-radius: 20px;
+  font-size: 30px;
+  font-weight: bolder;
+  text-align: center;
+  color: #777;
+  cursor: pointer;
+}
+
+.tabUserName {
+  width: 80%;
+  margin: 0 20px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: bolder;
 }
 </style>

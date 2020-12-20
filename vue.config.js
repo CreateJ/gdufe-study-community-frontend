@@ -7,9 +7,23 @@ module.exports = {
         components: "@/components",
         views: "@/views",
         network: "@/network",
-        store: '@/store',
-        plugin: '@/plugins'
-      },
-    },
+        store: "@/store",
+        plugin: "@/plugins"
+      }
+    }
   },
+  dev: {
+    // Paths
+    assetsSubDirectory: "static",
+    assetsPublicPath: "/",
+    proxyTable: {
+      "/api": {
+        target: "http://localhost:8080", //后期可以改
+        changeOrigin: true,
+        pathRewrite: {
+          "^/api": ""
+        }
+      }
+    }
+  }
 };
