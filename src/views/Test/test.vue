@@ -7,7 +7,7 @@
     </el-row>
     <el-row class="buttonBox">
       <el-col :span="16" :offset="4">
-        <h3>讨论点击相关</h3>
+        <h3>讨论相关功能</h3>
         <ul class="class">
           <li class="classBtnli"><el-button>点赞</el-button></li>
           <li class="classBtnli">
@@ -21,7 +21,7 @@
             <el-button @click="clickSetTop">置顶</el-button>
           </li>
         </ul>
-        <h3>文章相关</h3>
+        <h3>文章相关功能</h3>
         <ul class="class">
           <li class="classBtnli">
             <span>文章标题：</span>
@@ -35,30 +35,56 @@
             <el-input class="normalInput" v-model="postId"></el-input>
             <el-button @click="clickDeleteDiscuss">删除</el-button>
           </li>
-
+          <li class="classBtnli">
+            <span>想要搜索的关键字：</span>
+            <el-input class="normalInput" v-model="keyWord"></el-input>
+            <el-button @click="clickSearchPost">查找</el-button>
+          </li>
           <li class="classBtnli"><el-button>修改</el-button></li>
-          <li class="classBtnli"><el-button>查找</el-button></li>
         </ul>
         <h3>关注相关功能</h3>
         <ul class="class">
           <li class="classBtnli">
             <span>想要关注的用户Id：</span>
-            <el-input class="normalInput" v-model="postId"></el-input>
-            <el-button disabled @click="clickFollow">关注</el-button>
+            <el-input class="normalInput" v-model="userId"></el-input>
+            <el-button @click="clickFollow">关注</el-button>
           </li>
           <li class="classBtnli">
             <span>想要取消关注的用户Id：</span>
-            <el-input class="normalInput" v-model="postId"></el-input>
-            <el-button disabled @click="clickNoFollow">取关</el-button>
+            <el-input class="normalInput" v-model="userId"></el-input>
+            <el-button @click="clickUnFollow">取关</el-button>
           </li>
           <li class="classBtnli">
-            <span>关注了别人的用户Id：</span>
-            <el-input class="normalInput" v-model="postId"></el-input>
-            <el-button @click="clickShowFollowee">查看某人关注的所有用户</el-button></li>
+            <span>我的id：</span>
+            <el-input class="normalInput" v-model="userId"></el-input>
+            <el-button @click="clickShowFollowees">
+              查看我关注的
+            </el-button>
+          </li>
           <li class="classBtnli">
-            <span>被别人关注了的用户Id：</span>
-            <el-input class="normalInput" v-model="postId"></el-input>
-            <el-button @click="clickShowFollower">查看关注某人的所有用户</el-button></li>
+            <span>我的id：</span>
+            <el-input class="normalInput" v-model="userId"></el-input>
+            <el-button @click="clickShowFollowers">
+              查看我的粉丝
+            </el-button>
+          </li>
+        </ul>
+        <h3>个人主页相关功能</h3>
+        <ul class="class">
+          <li class="classBtnli">
+            <span>查看某人发表的文章</span>
+            <el-input class="normalInput" v-model="userId"></el-input>
+            <el-button @click="clickShowMyDiscussPost">
+              查看
+            </el-button>
+          </li>
+          <li class="classBtnli">
+            <span>查看某人评论过的文章</span>
+            <el-input class="normalInput" v-model="userId"></el-input>
+            <el-button @click="clickShowMyReplyPost">
+              查看
+            </el-button>
+          </li>
         </ul>
       </el-col>
     </el-row>
@@ -80,7 +106,14 @@ import {
   publishDiscuss,
   deleteDiscuss,
   setWonderful,
-  setTop
+  setTop,
+  showFollowees,
+  showFollowers,
+  searchPost,
+  getMyDiscussPost,
+  getMyReplyPost,
+  followUser,
+  unFollowUser
 } from "@/network/test";
 export default {
   name: "",
@@ -92,7 +125,9 @@ export default {
       error: "",
       postTitle: "",
       postContent: "",
-      postId: ""
+      postId: "",
+      userId: "",
+      keyWord: ""
     };
   },
   watch: {},
@@ -143,21 +178,49 @@ export default {
           this.error = err;
         });
     },
+
     // 关注
-    clickFollow(){
-
+    clickFollow() {
+      followUser(3, this.userId).then(res => {
+        this.result = res;
+      });
     },
+
     // 取消关注
-    clickNoFollow(){
-
+    clickUnFollow() {
+      unFollowUser(3, this.userId).then(res => {
+        this.result = res;
+      });
     },
+
     // 查看某人关注的所有用户
-    clickShowFollowee(){
-
+    clickShowFollowees() {
+      showFollowees(this.userId).then(res => {
+        this.result = res;
+      });
     },
-    // 查看某人的粉丝
-    clickShowFollower(){
 
+    // 查看某人的粉丝
+    clickShowFollowers() {
+      showFollowers(this.userId).then(res => {
+        this.result = res;
+      });
+    },
+    // 查找文章
+    clickSearchPost() {
+      searchPost(this.keyWord).then(res => {
+        this.result = res;
+      });
+    },
+    clickShowMyDiscussPost() {
+      getMyDiscussPost(this.userId).then(res => {
+        this.result = res;
+      });
+    },
+    clickShowMyReplyPost() {
+      getMyReplyPost(this.userId).then(res => {
+        this.result = res;
+      });
     }
   },
   created() {},
