@@ -15,13 +15,13 @@
         />
         <div
           class="tabHeaderUrl"
-          v-else="!$store.state.isLogin"
+          v-else
           @click="LinkTo('/login')"
         >
           请登录
         </div>
         <div class="tabUserName">{{ userName }}</div>
-        <el-button type="primary" class="tabBotton">发起讨论</el-button>
+        <el-button type="primary" class="tabBotton" @click="clickPublish">发起讨论</el-button>
         <el-button type="primary" class="tabBotton">回到顶部</el-button>
       </el-col>
       <el-col :span="13">
@@ -44,7 +44,7 @@
 
 <script>
 import { getIndexData, getIndexDataNew } from "@/network/home";
-import { LGSC } from "@/store/mutations-types";
+import { LGSC, CETP } from "@/store/mutations-types";
 import { ITLG } from "@/store/actions-types";
 import Hello from "@/views/Home/Hello";
 import Dropdown from "@/views/Home/Dropdown";
@@ -90,7 +90,11 @@ export default {
         });
       });
     },
-    LinkTo
+    LinkTo,
+    clickPublish() {
+      this.$store.commit(CETP);
+      this.LinkTo('/editDiscuss');
+    }
   },
   created() {
     // 获取首页文章列表
