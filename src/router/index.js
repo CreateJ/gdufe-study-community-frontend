@@ -10,6 +10,8 @@ const Message = () => import("@/views/Message/message");
 const Null = () => import("@/views/Null/null");
 const Test = () => import("@/views/Test/test");
 const Info = () => import("@/views/Info/info");
+const OtherUser = () => import("@/views/OtherUser/OtherUser");
+const EditDiscuss = () => import("@/views/EditDiscuss/EditDiscuss");
 
 Vue.use(Router);
 
@@ -63,6 +65,16 @@ export default new Router({
       path: "/info",
       name: "info",
       component: Info
+    },
+    {
+      path: "/otherUser",
+      name: "otherUser",
+      component: OtherUser
+    },
+    {
+      path: "/editDiscuss",
+      name: "eidtDiscuss",
+      component: EditDiscuss
     }
   ]
 });

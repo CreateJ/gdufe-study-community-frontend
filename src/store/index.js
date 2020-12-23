@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import { LGSC, SUIF, LGOT, OPDE, CODE, UDRI, URRI } from "./mutations-types";
+import { LGSC, SUIF, LGOT, OPDE, CODE, UDRI, URRI, CETP, CETR } from "./mutations-types";
 import { ITLG, GRPI } from "./actions-types";
 import { getUserInfo } from "@/network/store.js";
 
@@ -18,7 +18,11 @@ const store = new Vuex.Store({
     // drawer控制
     drawerVisible: false,
     replyInfo: {}, // 保存评论模块的详细信息
-    replyRequestInfo: {}
+    replyRequestInfo: {},
+
+    // 发布与编辑
+    editType: "", // publish or reEdit
+    reEditPostId: 0,
   },
   mutations: {
     // 登录成功，将登录状态更改为true，方便vue响应式显示首页和消息、个人页面组件
@@ -55,6 +59,13 @@ const store = new Vuex.Store({
       s.replyRequestInfo.entityType = payload.entityType;
       s.replyRequestInfo.entityId = payload.entityId;
       s.replyRequestInfo.targetId = payload.targetId;
+    },
+    [CETP](s) {
+      s.editType = "publish";
+    },
+    [CETR](s, payload) {
+      s.editType = "reEdit";
+      s.reEditPostId = payload.postId;
     }
   },
   getters: {},

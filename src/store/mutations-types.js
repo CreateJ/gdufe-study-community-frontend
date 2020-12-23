@@ -17,3 +17,9 @@ export const UDRI = "updateReplyInfo"
 
 // 更新即将使用的添加评论请求信息
 export const URRI = "updateReplyRequestInfo"
+
+// 将编辑状态更换为pubish
+export const CETP = "ChangeEditTypeToPublish"
+
+// 将编辑状态更新为ReEdit，同时更新reEditPostId
+export const CETR = "ChangeEditTypeToReEdit"

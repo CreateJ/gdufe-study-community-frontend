@@ -46,27 +46,70 @@ export function setTop(postId) {
   });
 }
 
-
-// 关注的用户
-export function showFollowee(postId) {
-  const dataobj = { postId };
+// 关注某用户
+export function followUser(type, userId) {
+  const dataobj = { entityType: type, entityId: userId};
   const formData = qs.stringify(dataobj);
   const postData = { formData, is_isFormData: true };
   return request({
-    url: "/discuss/top",
+    url: "/follow",
     method: "post",
     data: postData
   });
 }
 
-// 粉丝
-export function showFollower(postId) {
-  const dataobj = { postId };
+
+// 取关注用户
+export function unFollowUser(type, userId) {
+  const dataobj = { entityType: type, entityId: userId};
   const formData = qs.stringify(dataobj);
   const postData = { formData, is_isFormData: true };
   return request({
-    url: "/follower/top",
+    url: "/unfollow",
     method: "post",
     data: postData
+  });
+}
+
+// 我关注的
+export function showFollowees(userId) {
+  return request({
+    url: "/followees/" + userId,
+    method: "get"
+  });
+}
+
+// 粉丝
+export function showFollowers(userId) {
+  return request({
+    url: "/followers/" + userId,
+    method: "get"
+  });
+}
+
+// 查找包含某个关键字的文章
+export function searchPost(keyWord) {
+  request({
+    params: {
+      keyword: keyWord
+    },
+    url: "/search",
+    method: "get"
+  });
+}
+
+// 获取某个用户的所有文章
+export function getMyDiscussPost(userId) {
+  return request({
+    url: "/user/myDiscussPost/" + userId,
+    method: "get"
+  });
+}
+
+// 获取某个用户的评论过的所有文章
+export function getMyReplyPost(userId) {
+  return request({
+    url: "/user/replyPost/" + userId,
+    method: "get"
   });
 }
