@@ -7,25 +7,22 @@
     </el-row>
     <el-row class="postBox">
       <el-col :span="3" :offset="4">
-        <div class="userInfo" v-if="typeof $store.state.userInfo.user != 'undefined'">
-          <div class="avatar">
-            <img src="$store.state.userInfo.user.headerUrl" alt="头像">
-          </div>
-          <div class="aboutUser">
-            <div class="postNum">
-              <p>帖子</p>
-              <p>23</p>
-            </div>
-            <div class="followerNum">
-              <p>粉丝</p>
-              <p>100</p>
-            </div>
-            <div class="followeeNum">
-              <p>关注</p>
-              <p>57</p>
-            </div>
-          </div>
+        <img
+          :src="userHeaderUrl"
+          alt=""
+          class="tabHeaderUrl"
+          v-if="$store.state.isLogin"
+        />
+        <div
+          class="tabHeaderUrl"
+          v-else
+          @click="LinkTo('/login')"
+        >
+          请登录
         </div>
+        <div class="tabUserName">{{ userName }}</div>
+        <el-button type="primary" class="tabBotton">发起讨论</el-button>
+        <el-button type="primary" class="tabBotton">回到顶部</el-button>
       </el-col>
       <el-col :span="13">
         <dropdown @changeOrderMode="changeOrderMode"></dropdown>
@@ -47,11 +44,12 @@
 
 <script>
 import { getIndexData, getIndexDataNew } from "@/network/home";
-import { LGSC } from "@/store/mutations-types"
-import { ITLG } from "@/store/actions-types"
+import { LGSC } from "@/store/mutations-types";
+import { ITLG } from "@/store/actions-types";
 import Hello from "@/views/Home/Hello";
 import Dropdown from "@/views/Home/Dropdown";
 import HomePost from "@/views/Home/Post";
+import { LinkTo } from "@/assets/utils/baseUtil";
 
 export default {
   name: "",
@@ -65,7 +63,9 @@ export default {
     return {
       postDatas: [],
       currentPage: 0,
-      NowOrderMode: 0 // 0代表最新 1代表最热
+      NowOrderMode: 0, // 0代表最新 1代表最热
+      userHeaderUrl: "",
+      userName: ""
     };
   },
   watch: {},
@@ -90,7 +90,7 @@ export default {
         });
       });
     },
-    
+    LinkTo
   },
   created() {
     // 获取首页文章列表
@@ -98,7 +98,8 @@ export default {
       // console.log(res);
       this.postDatas = res.discussPosts;
     });
-
+    this.userHeaderUrl = this.$store.state.userInfo.user.headerUrl;
+    this.userName = this.$store.state.userInfo.user.username;
   },
   mounted() {}
 };
@@ -129,8 +130,28 @@ export default {
   border: 1px solid var(--main-color);
 }
 
-.userInfo {
-  padding: 16px;
+.tabBotton {
+  display: block;
+  width: 80%;
+  margin: 20px;
 }
 
+.tabHeaderUrl {
+  width: 80%;
+  margin: 20px;
+  border-radius: 20px;
+  font-size: 30px;
+  font-weight: bolder;
+  text-align: center;
+  color: #777;
+  cursor: pointer;
+}
+
+.tabUserName {
+  width: 80%;
+  margin: 0 20px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: bolder;
+}
 </style>
