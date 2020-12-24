@@ -125,7 +125,8 @@ export default {
           AddComment(this.$store.state.replyRequestInfo, comment)
             .then((res) => {
               this.initDiscuss();
-              this.$message.success("评论成功！")
+              this.$message.success("评论成功！");
+              this.$bus.$emit("replySuccess");
             })
             .catch((err) => {
               this.$message.error("评论失败！")

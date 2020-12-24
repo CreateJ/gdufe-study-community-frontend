@@ -13,6 +13,20 @@
             <li class="userCreateTime">注册于{{ userCreateTime }}</li>
             <li class="userIntroduction">这个人很懒，什么都没有写！</li>
           </ul>
+          <div
+            class="follow-btn"
+            v-if="!isHimself && !hasFollowed"
+            @click="clickFollow"
+          >
+            <i class="el-icon-plus"></i> 关注
+          </div>
+          <div
+            class="follow-btn cancel-follow-btn"
+            v-if="!isHimself && hasFollowed"
+            @click="clickCancelFollow"
+          >
+            取消关注
+          </div>
         </div>
       </el-col>
     </el-row>
@@ -23,29 +37,45 @@
         :md="{ span: 20, offset: 2 }"
       >
         <el-tabs type="border-card">
-          <el-tab-pane label="我发布的帖子">我发布的帖子</el-tab-pane>
-          <el-tab-pane label="我回复的帖子">
-            <my-reply-post v-for="item in 2" :key=item></my-reply-post>
+          <el-tab-pane :label="isHimself ? '我发布的帖子' : '他发布的帖子'">
+            <p v-if="myPosts.length == 0">还没有发布过帖子哦~</p>
+            <my-reply-post
+              v-for="(item, index) in myPosts"
+              :key="index"
+              :post="item.post"
+              :canDelete="isHimself ? true : false"
+              @deletePost="listenDeletePost(item.post.id)"
+            ></my-reply-post>
           </el-tab-pane>
-          <el-tab-pane label="我关注的人">
-            <p v-if="!hasFollowee">你还没有关注的人哦~</p>
+          <el-tab-pane :label="isHimself ? '我回复的帖子' : '他回复的帖子'">
+            <p v-if="replyPosts.length == 0">还没有回复过别人的帖子哦~</p>
+            <my-reply-post
+              v-for="(item, index) in replyPosts"
+              :key="index"
+              :post="item.post"
+            ></my-reply-post>
+          </el-tab-pane>
+          <el-tab-pane :label="isHimself ? '我关注的人' : '他关注的人'">
+            <p v-if="followee.length == 0">还没有关注的人哦~</p>
             <div v-else class="follow">
               <follow
                 v-for="(item, index) in followee"
                 :key="index"
-                :info="item"
+                :info="item.user"
                 class="follow-item"
+                @click.native="toHisPage(item.user.id)"
               ></follow>
             </div>
           </el-tab-pane>
-          <el-tab-pane label="关注我的人">
-            <p v-if="!hasFollower">还没有人关注你哦~</p>
+          <el-tab-pane :label="isHimself ? '关注我的人' : '关注他的人'">
+            <p v-if="follower.length == 0">还没有受到关注哦~</p>
             <div v-else class="follow">
               <follow
                 v-for="(item, index) in follower"
                 :key="index"
-                :info="item"
+                :info="item.user"
                 class="follow-item"
+                @click.native="toHisPage(item.user.id)"
               ></follow>
             </div>
           </el-tab-pane>
@@ -56,7 +86,17 @@
 </template>
 
 <script>
-import { showFollowee, showFollower } from "@/network/personal";
+import {
+  showFollowee,
+  showFollower,
+  getMyDiscussPost,
+  getMyReplyPost,
+  getProfile,
+  followUser,
+  unFollowUser,
+  deleteDiscuss,
+} from "@/network/personal";
+import { LinkTo } from "@/assets/utils/baseUtil";
 import Follow from "./follow";
 import MyReplyPost from "./myReplyPost";
 export default {
@@ -71,35 +111,103 @@ export default {
       userHeaderUrl: "",
       userName: "",
       userCreateTime: "",
+      hasFollowed: false,
       followee: [],
       follower: [],
-      hasFollowee: false,
-      hasFollower: false,
+      myPosts: [],
+      replyPosts: [],
+      isHimself: true,
     };
   },
   watch: {},
   computed: {},
   methods: {
-    initUserInfo() {
-      this.userHeaderUrl = this.$store.state.userInfo.user.headerUrl;
-      this.userName = this.$store.state.userInfo.user.username;
-      this.userCreateTime = this.$store.state.userInfo.user.createTime.split(
-        "T"
-      )[0];
-      showFollowee(this.$store.state.userInfo.user.id).then(res => {
-        this.followee = res.users;
-        this.hasFollowee = this.followee.length != 0;
+    LinkTo,
+    initUserInfo(id) {
+      let _this = this;
+      getProfile(id).then((res) => {
+        _this.userId = res.user.id;
+        _this.userName = res.user.username;
+        _this.userHeaderUrl = res.user.headerUrl;
+        _this.userCreateTime = res.user.createTime.split("T")[0];
+        _this.hasFollowed = res.hasFollowed;
       });
-      showFollower(this.$store.state.userInfo.user.id).then(res => {
-        this.follower = res.users; 
-        this.hasFollower = this.follower.length != 0;   
+
+      showFollowee(id).then((res) => {
+        console.log(res);
+        _this.followee = res.users;
+      });
+      showFollower(id).then((res) => {
+        _this.follower = res.users;
+      });
+      getMyDiscussPost(id).then((res) => {
+        _this.myPosts = res.discussPosts;
+      });
+      getMyReplyPost(id).then((res) => {
+        _this.replyPosts = res.replyPosts;
+      });
+      if (
+        typeof (_this.$store.state.userInfo.user) !== "undefined" &&
+        _this.$store.state.userInfo.user.id == id
+      ) {
+        _this.isHimself = true;
+      }else {
+        _this.isHimself = false;
+      }
+    },
+    clickFollow() {
+      console.log(this);
+      if (typeof this.$store.state.userInfo.user == "undefined") {
+        this.$message.error("请先登录");
+        this.LinkTo("/login");
+      } else {
+        followUser(3, this.$route.params.userId).then((res) => {
+          if (res.code == "200") {
+            this.$message.success("关注成功！");
+            this.initUserInfo();
+          } else {
+            this.$message.error("出错啦！请稍后再试！");
+          }
+        });
+      }
+    },
+    clickCancelFollow() {
+      unFollowUser(3, this.$route.params.userId).then((res) => {
+        if (res.code == "200") {
+          this.$message.success("取关成功！");
+          this.initUserInfo();
+        } else {
+          this.$message.error("出错啦！请稍后再试！");
+        }
       });
     },
+    toHisPage(id) {
+      this.initUserInfo(id);
+    },
+    listenDeletePost(id) {
+      let _this = this;
+      this.$confirm("此操作将永久删除该贴子及相关评论, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          deleteDiscuss(id).then((res) => {
+            if (res.code == "200") {
+              this.$message.success("删除成功！");
+              this.initUserInfo(_this.$route.params.userId);
+            } else {
+              this.$message.error("出错啦！请稍后再试！");
+            }
+          });
+        })
+        .catch(() => {});
+    },
   },
-  created() {
-    this.initUserInfo();
+  created() {},
+  mounted() {
+    this.initUserInfo(this.$route.params.userId);
   },
-  mounted() {},
 };
 </script>
 <style scoped>
@@ -148,5 +256,24 @@ export default {
 }
 .follow-item {
   padding: 10px;
+}
+.follow-btn {
+  position: absolute;
+  right: 140px;
+  top: 30px;
+  width: 80px;
+  height: 28px;
+  text-align: center;
+  color: #fff;
+  font-size: 14px;
+  line-height: 28px;
+  background-color: var(--main-color);
+  box-shadow: 0 0 10px 2px #fff;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.cancel-follow-btn {
+  background-color: rgb(194, 190, 190);
+  box-shadow: none;
 }
 </style>

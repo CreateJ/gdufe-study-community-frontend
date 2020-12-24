@@ -1,7 +1,7 @@
 <template>
   <div class="discussItem">
     <ul class="userInfo">
-      <li class="userHeader"><img :src="postman.headerUrl" alt="" /></li>
+      <router-link :to="'/personal/'+postman.id" tag="li" push class="userHeader"><img :src="postman.headerUrl" alt="" /></router-link>
       <li class="userName">{{ postman.username }}</li>
       <li class="createTime">{{ content.createTime | cutTime }}</li>
       <li class="timeDescribe"><slot name="timeDescribe">编辑</slot></li>
@@ -172,6 +172,7 @@ export default {
       this.$store.commit(URRI, replyRequestInfo);
       this.$store.dispatch(GRPI, payload);
     },
+    
   },
 };
 </script>
@@ -192,6 +193,7 @@ export default {
 .userHeader {
   width: 20px;
   height: 20px;
+  cursor: pointer;
 }
 .userHeader img {
   width: 20px;

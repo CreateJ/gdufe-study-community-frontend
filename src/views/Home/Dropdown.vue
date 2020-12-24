@@ -36,7 +36,7 @@ export default {
       if (command == 0) {
         this.NowOrderModeText = "最新讨论";
       } else {
-        this.NowOrderModeText = "最热讨论";
+        this.NowOrderModeText = "热门讨论";
       }
       this.$emit("changeOrderMode",command)
     },

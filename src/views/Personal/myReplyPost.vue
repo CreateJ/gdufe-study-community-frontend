@@ -1,18 +1,34 @@
 <template>
   <div class="replyPost">
-    <div class="title">红红火火恍恍惚惚</div>
-    <div class="content">哈哈哈哈</div>
+    <div class="title">{{post.title}}</div>
+    <div class="content">{{post.content}}</div>
+    <div class="delete-btn" @click="deletePost" v-if="canDelete"><i class="el-icon-delete"></i></div>
   </div>
 </template>
 
 <script>
 export default {
-
+  name: "MyReplyPost",
+  props: {
+    canDelete: false,
+    post: {
+      type: Object,
+      default() {
+        return {}
+      }
+    }
+  },
+  methods: {
+    deletePost() {
+      this.$emit("deletePost");
+    }
+  }
 }
 </script>
 
 <style scoped>
   .replyPost {
+    position: relative;
     padding: 16px;
     border: 1px solid #eee;
     border-radius: 8px;
@@ -30,5 +46,13 @@ export default {
   }
   .content {
     color: #666;
+  }
+  .delete-btn {
+    position: absolute;
+    right: 20px;
+    bottom: 10px;
+  }
+  .delete-btn:hover {
+    color: var(--main-color);
   }
 </style>

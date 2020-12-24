@@ -106,7 +106,13 @@ export default {
   },
   mounted() {
     this.createEditor();
+    this.$bus.$on("replySuccess", () => {
+      this.editor.txt.clear();
+    })
   },
+  beforeDestroy(){
+    this.$bus.$off("replySuccess")
+  }
 };
 </script>
 
