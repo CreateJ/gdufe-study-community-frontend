@@ -20,11 +20,11 @@ export function request(config) {
       if (config.method == "post") {
         if (config.data && config.data.$_isFormData === false) {
           // config.headers["Content-Type"] = "application/json";
-          console.log("1");
+          // console.log("1");
           config.data = config.data.dataobj;
         } else {
           // config.headers["Content-Type"] = "multipart/form-data";
-          console.log("2");
+          // console.log("2");
           config.data = config.data.formData;
         }
       }

@@ -26,7 +26,7 @@
               :replyCount="replyCount"
               :likeStatus="likeStatus"
               :likeCount="likeCount"
-              :type=1
+              :type="1"
               :postId="content.id"
             ></discuss-item>
 
@@ -43,10 +43,27 @@
           </el-col>
           <el-col :span="3" class="mainBox_right">
             <button class="replyBtn_right" @click="clickReply">回复</button>
-            <button v-show="postman.id === $store.state.userId" class="replyBtn_right" @click="clickReEdit">编辑</button>
-            <button v-show="$store.state.userType === 1" class="replyBtn_right" @click="clickSetTop">置顶</button>
-            <button v-show="$store.state.userType === 1" class="replyBtn_right" @click="clickSetWonderful">加精</button>
-
+            <button
+              v-show="postman.id === $store.state.userId"
+              class="replyBtn_right"
+              @click="clickReEdit"
+            >
+              编辑
+            </button>
+            <button
+              v-show="$store.state.userType === 1"
+              class="replyBtn_right"
+              @click="clickSetTop"
+            >
+              置顶
+            </button>
+            <button
+              v-show="$store.state.userType === 1"
+              class="replyBtn_right"
+              @click="clickSetWonderful"
+            >
+              加精
+            </button>
           </el-col>
         </el-row>
       </el-main>
@@ -73,9 +90,9 @@
 </template>
 
 <script>
-import { getPostAllInfo } from "@/network/discuss";
+import { getPostAllInfo, setTop, setWonderful } from "@/network/discuss";
 import { AddComment } from "@/network/reply";
-import { LinkTo,refeshTo } from "@/assets/utils/baseUtil";
+import { LinkTo, refeshTo } from "@/assets/utils/baseUtil";
 import { OPDE, CODE, URRI, CETR } from "@/store/mutations-types";
 import { GRPI } from "@/store/actions-types";
 import DiscussItem from "@/views/Discuss/DiscussItem";
@@ -86,7 +103,7 @@ export default {
   components: {
     DiscussItem,
     vueDrawer,
-    Edit,
+    Edit
   },
   props: {},
   data() {
@@ -96,24 +113,24 @@ export default {
       replies: [],
       replyCount: 0,
       likeCount: 0,
-      likeStatus: 1,
+      likeStatus: 1
     };
   },
   watch: {},
   computed: {
     userAvatar() {
-      if (typeof( this.$store.state.userInfo.user ) != "undefined") {
+      if (typeof this.$store.state.userInfo.user != "undefined") {
         return this.$store.state.userInfo.user.headerUrl;
       }
-    },
+    }
   },
-  methods: {   
+  methods: {
     AddComment,
     LinkTo,
     refeshTo,
     initDiscuss() {
       let postId = this.$route.params.postId;
-      getPostAllInfo(postId).then((res) => {
+      getPostAllInfo(postId).then(res => {
         this.postman = res.user;
         this.content = res.post;
         this.replies = res.comments;
@@ -127,49 +144,55 @@ export default {
         .then(() => {
           // 发送请求
           AddComment(this.$store.state.replyRequestInfo, comment)
-            .then((res) => {
+            .then(res => {
               this.initDiscuss();
               this.$message.success("评论成功！");
               this.$bus.$emit("replySuccess");
             })
-            .catch((err) => {
-              this.$message.error("评论失败！")
+            .catch(err => {
+              this.$message.error("评论失败！");
               console.log(err + "这个是err发的");
             })
             .finally(() => {
               this.$store.commit(CODE);
             });
         })
-        .catch(() => {
-          
-        });
+        .catch(() => {});
     },
     clickReply() {
-      scrollTo(0,1000);
+      scrollTo(0, 1000);
       this.$store.commit(OPDE);
       // 请求并更新，当前回复的用户信息，用于显示头像等
       let postId = this.$route.params.postId; // 获取当前文章id
       let payload = {
-        userId: this.postman.id,
+        userId: this.postman.id
       };
       let replyRequestInfo = {
         entityId: this.content.id,
         entityType: 1,
         postId,
-        targetId: this.postman.id,
+        targetId: this.postman.id
       };
       this.$store.commit(URRI, replyRequestInfo);
       this.$store.dispatch(GRPI, payload);
     },
     clickReEdit() {
-      this.$store.commit(CETR, { postId: this.$route.params.postId})
-      this.LinkTo("/editDiscuss")
+      this.$store.commit(CETR, { postId: this.$route.params.postId });
+      this.LinkTo("/editDiscuss");
     },
-    clickSetTop(){
-      console.log('置顶')
+    clickSetTop() {
+      console.log("置顶");
+      console.log(this.$route.params.postId)
+      setTop(this.$route.params.postId).then(res => {
+        console.log(res);
+      }).catch(err => {
+        console.log(err)
+      });
     },
-    clickSetWonderful(){
-      console.log('加精')
+    clickSetWonderful() {
+      setWonderful(this.$route.params.postId).then(res => {
+        console.log(res);
+      });
     }
   },
   created() {
@@ -179,12 +202,9 @@ export default {
     this.$bus.$on("clickReply", res => {
       this.sendReply(res);
     });
-    this.$bus.$on("refreshData", ()=> {
+    this.$bus.$on("refreshData", () => {
       this.initDiscuss();
     });
-    console.log(this.$store.state.userType)
-
-
   },
   beforeDestory() {
     this.$bus.$off("clickReply");

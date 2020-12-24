@@ -23,3 +23,27 @@ export function sendLike(entityType, entityId, entityUserId, postId) {
     data : postData
   });
 }
+
+export function setTop(postId) {
+  let dataobj = {postId:postId};
+  const formData = qs.stringify(dataobj);
+  const postData = { formData, $_isFormData: true };
+  return request({
+    url: "/discuss/top",
+    method: "post",
+    data : postData
+  });
+}
+
+
+export function setWonderful(postId) {
+  let dataobj = {postId};
+  const formData = qs.stringify(dataobj);
+  const postData = { formData, $_isFormData: true };
+  return request({
+    url: "/discuss/wonderful",
+    method: "post",
+    data : postData
+  });
+}
+
