@@ -12,13 +12,18 @@
         <li>GDUFE&nbsp;COMMUNITY&nbsp;</li>
       </ul>
     </el-col>
-    <el-col 
-      :xs=16
-      :sm=16
-      :md=14
-      class="menu_list">
-      <el-input placeholder="快来挖掘宝藏吧！" v-model="searchInput" class="input">
-        <el-button slot="append" icon="el-icon-search" @click="searchClick" class="search_btn"></el-button>
+    <el-col :xs="16" :sm="16" :md="14" class="menu_list">
+      <el-input
+        placeholder="快来挖掘宝藏吧！"
+        v-model="searchInput"
+        class="input"
+      >
+        <el-button
+          slot="append"
+          icon="el-icon-search"
+          @click="searchClick"
+          class="search_btn"
+        ></el-button>
       </el-input>
 
       <el-menu
@@ -48,21 +53,17 @@
         >
         <el-submenu index="2" v-show="$store.state.isLogin">
           <template slot="title">{{ $store.state.userName }}</template>
-          <el-menu-item :index="'/personal/156' + userId"
+          <el-menu-item :index="'/personal/' + userId"
             ><i class="el-icon-user icon_profile"></i>个人空间</el-menu-item
           >
           <el-menu-item index="/info"
             ><i class="el-icon-edit icon_profile"></i>修改信息</el-menu-item
           >
           <!-- 点击退出登录将直接跳转到home，恢复至未登录状态 -->
-          <el-menu-item index="/home" @click="logout"
-<<<<<<< HEAD
-            ><i class="el-icon-switch-button icon_profile"></i
+          <el-menu-item index="/home" @click="logout">
+            <i class="el-icon-switch-button icon_profile"></i
             >退出登录</el-menu-item
           >
-=======
-            ><i class="el-icon-switch-button icon_profile"></i>退出登录</el-menu-item>
->>>>>>> 927551e9900d0798223d5c44bc737dd14f2be50e
         </el-submenu>
       </el-menu>
     </el-col>
@@ -97,14 +98,14 @@ export default {
       clearLoingCookie();
       this.$store.commit(LGOT);
     },
-    searchClick(){
+    searchClick() {
       console.log("正在进行搜索");
-      this.$bus.$emit('showSearchRes',this.searchInput);
+      this.$bus.$emit("showSearchRes", this.searchInput);
     },
   },
   created() {},
   mounted() {
-    if (typeof (this.$store.state.userInfo.user) != "undefined") {
+    if (typeof this.$store.state.userInfo.user != "undefined") {
       this.userId = this.$store.state.userInfo.user.id;
       console.log(this.$store.state.userInfo.user);
     }

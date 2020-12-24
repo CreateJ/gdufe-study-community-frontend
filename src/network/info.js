@@ -18,3 +18,15 @@ export function upLoadHeader(file) {
     //headers: {'Content-Type': 'multipart/form-data'}
   });
 }
+
+export function changePassword(oldPW, newPW, surePW) {
+  const dataobj = { oldPW, newPW, surePW };
+  const formData = qs.stringify(dataobj);
+  const postData = { formData, is_isFormData: true };
+  return request({
+    url: "/user/password",
+    method: "post",
+    data: postData,
+    //headers: {'Content-Type': 'multipart/form-data'}
+  });
+}

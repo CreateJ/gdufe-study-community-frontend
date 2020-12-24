@@ -34,6 +34,13 @@
               show-password
             ></el-input>
           </el-form-item>
+          <el-form-item>
+            <div class="btnBox">
+              <el-button class="btnItem" type="primary" @click="modifyCLick"
+                >修改密码
+              </el-button>
+            </div>
+          </el-form-item>
         </el-form>
       </el-col>
     </el-row>
@@ -43,7 +50,7 @@
 <script>
 import axios from "axios";
 // import "vue-axios";
-import { getUserInfo, upLoadHeader } from "@/network/info";
+import { getUserInfo, upLoadHeader, changePassword } from "@/network/info";
 export default {
   name: "",
   components: {},
@@ -72,7 +79,7 @@ export default {
     var validateSPW = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("请再次确认密码"));
-      } else if (value !== this.form.surePW) {
+      } else if (value !== this.form.newPW) {
         callback(new Error("两次输入密码不一致"));
       } else {
         callback();
@@ -96,30 +103,30 @@ export default {
   methods: {
     initPage() {
       getUserInfo(this.$store.state.userId)
-        .then(res => {
+        .then((res) => {
           console.log(res);
           this.headerUrl = res.user.headerUrl;
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         });
     },
     handleRemove(file, fileList) {
-        var data = {
-            attacMentCode: this.attachMentCode
-        };
-        deleteAttachment(data).then(res => {
-            alert(res);
-        });
+      var data = {
+        attacMentCode: this.attachMentCode,
+      };
+      deleteAttachment(data).then((res) => {
+        alert(res);
+      });
     },
     handlePreview(file) {
       console.log(file);
     },
     handleExceed(files, fileList) {
       this.$message.warning(
-        `当前限制选择 3 个文件，本次选择了 ${
-          files.length
-        } 个文件，共选择了 ${files.length + fileList.length} 个文件`
+        `当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${
+          files.length + fileList.length
+        } 个文件`
       );
     },
     beforeRemove(file, fileList) {
@@ -145,21 +152,43 @@ export default {
       //   .catch(err => {
       //     alert(err);
       //   });
-      upLoadHeader(fileObj).then(res=>{
-        console.log(res)
-      })
-    }
+      upLoadHeader(fileObj).then((res) => {
+        console.log(res);
+      });
+    },
+
+    modifyCLick() {
+      var _this = this;
+      _this.$refs.form.validate((valid) => {
+        if (!valid) return false;
+        const { oldPW, newPW, surePW } = this.form;
+        changePassword(oldPW, newPW, surePW).then((res) => {
+          console.log(res);
+        });
+        console.log(this.form.userID + "注册成功！");
+      });
+    },
   },
   created() {},
   mounted() {},
 };
 </script>
-<<<<<<< Updated upstream
-<style scoped></style>
-=======
 <style scoped>
 .pswForm {
   padding: 20px 0;
 }
+.btnBox {
+  display: flex;
+  justify-content: space-around;
+  margin: 10px 0 20px -80px;
+}
+
+.btnBox .btnItem {
+  background-color: var(--main-color);
+  outline: none;
+  border: none;
+}
+.btnBox .btnItem:hover {
+  opacity: 0.8;
+}
 </style>
->>>>>>> Stashed changes
