@@ -15,11 +15,15 @@
         </div>
       </div>
     </div>
+    <div class="closeBtn" @click="closeDrawer">
+      <i class="el-icon-close"></i>
+    </div>
   </div>
 </template>
 
 <script>
 import E from "wangeditor";
+import { CODE } from "@/store/mutations-types";
 export default {
   name: "edit",
   data() {
@@ -31,12 +35,12 @@ export default {
   props: {},
   methods: {
     clickReply() {
-      if(typeof( this.$store.state.userInfo.user ) === "undefined") {
+      if (typeof this.$store.state.userInfo.user === "undefined") {
         alert("请先登录！");
         return;
       }
       let html = this.editor.txt.html();
-      if(html === "") {
+      if (html === "") {
         alert("回复不能为空！");
         return;
       }
@@ -69,6 +73,31 @@ export default {
       ];
       this.editor.create();
     },
+    closeDrawer() {
+      console.log(this.editor.txt.text()=='');
+      if(this.editor.txt.text().trim()=='') {
+        this.editor.txt.clear();
+        this.$store.commit(CODE);
+        return;
+      }
+      this.$confirm(
+        "检测到未保存的内容，是否在离开页面前保存当前内容？",
+        "确认信息",
+        {
+          distinguishCancelAndClose: true,
+          confirmButtonText: "保存",
+          cancelButtonText: "放弃",
+        }
+      )
+        .then(() => {
+          this.$store.commit(CODE);
+        })
+        .catch((action) => {
+          if(action != "cancel") return;
+          this.editor.txt.clear();
+          this.$store.commit(CODE);
+        });
+    },
   },
   created() {
     if (this.$store.state.userInfo.user !== undefined) {
@@ -77,12 +106,19 @@ export default {
   },
   mounted() {
     this.createEditor();
+    this.$bus.$on("replySuccess", () => {
+      this.editor.txt.clear();
+    })
   },
+  beforeDestroy(){
+    this.$bus.$off("replySuccess")
+  }
 };
 </script>
 
 <style scoped>
 .edit {
+  /* position: relative; */
   width: 60%;
   height: 100%;
   margin: auto;
@@ -117,7 +153,7 @@ export default {
   cursor: pointer;
 }
 .replyBtn:hover {
-  opacity: .8;
+  opacity: 0.8;
 }
 .editRegion {
   width: 0;
@@ -141,6 +177,13 @@ export default {
   overflow: auto;
 }
 .editTextContainer /deep/ .w-e-text {
-  min-height: 0!important;
+  min-height: 0 !important;
+}
+.closeBtn {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  font-size: 24px;
+  cursor: pointer;
 }
 </style>

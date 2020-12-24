@@ -17,4 +17,3 @@ export function getIndexDataNew(statu,page){
   })
 }
 
-

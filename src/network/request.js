@@ -29,7 +29,6 @@ export function request(config) {
         }
       }
 
-      console.log(config);
       return config;
     }
     // err => {

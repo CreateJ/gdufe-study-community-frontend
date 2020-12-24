@@ -16,8 +16,8 @@ export function sendRegister(username, password, email) {
   });
 }
 
-export function registerConfirm(userId,code){
+export function registerConfirm(userId, code) {
   return request({
-    url: "/activation/"+userId+"/"+code,
+    url: "/activation/" + userId + "/" + code,
   })
 }

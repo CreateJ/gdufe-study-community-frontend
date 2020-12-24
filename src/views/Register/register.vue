@@ -55,6 +55,7 @@
 </template>
 
 <script>
+import { LinkTo } from "@/assets/utils/baseUtil";
 import { sendRegister } from '@/network/register'
 export default {
   name: "",
@@ -64,12 +65,12 @@ export default {
     const validateID = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("请输入账号"));
-      } else if (
-        String(value).trim() === "" ||
-        value.length < 6 ||
-        value.length > 18
-      ) {
-        callback(new Error("请输入有效的账号"));
+        // } else if (
+        //   String(value).trim() === "" ||
+        //   value.length < 6 ||
+        //   value.length > 18
+        // ) {
+        //   callback(new Error("请输入有效的账号"));
       } else {
         callback();
       }
@@ -120,9 +121,33 @@ export default {
   watch: {},
   computed: {},
   methods: {
+    LinkTo,
     registerCLick() {
-      this.$refs.form.validate((valid) => {
+      var _this = this;
+      _this.$refs.form.validate((valid) => {
         if (!valid) return false;
+        // let data = {
+        //   username: this.form.userID,
+        //   password: this.form.userPW,
+        //   email: this.form.userEM,
+        // };
+        // Register(data).then((res) => {
+        //   console.log(res);
+        //   if(res.code == "200") {
+        //     _this.$message({
+        //       message: res.msg,
+        //       type: "success",
+        //     });
+        //     // setTimeout(() => {
+        //     //   _this.LinkTo("/login", "replace");
+        //     // }, 2000);
+        //   }else {
+        //     _this.$message({
+        //       message: res.usernameMsg || res.passwordMsg || res.emailMsg,
+        //       type: "error"
+        //     })
+        //   }
+        // });
         const { userID, userPW, userEM } = this.form;
         sendRegister(userID, userPW, userEM).then(res=>{
           console.log(res);
