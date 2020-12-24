@@ -56,9 +56,13 @@
           >
           <!-- 点击退出登录将直接跳转到home，恢复至未登录状态 -->
           <el-menu-item index="/home" @click="logout"
+<<<<<<< HEAD
             ><i class="el-icon-switch-button icon_profile"></i
             >退出登录</el-menu-item
           >
+=======
+            ><i class="el-icon-switch-button icon_profile"></i>退出登录</el-menu-item>
+>>>>>>> 927551e9900d0798223d5c44bc737dd14f2be50e
         </el-submenu>
       </el-menu>
     </el-col>

@@ -1,20 +1,23 @@
 import { request } from "./request";
-import qs from 'qs';
+import qs from "qs";
 
-export function Register(data){
-  const {username,password,email} = data;
+export function sendRegister(username, password, email) {
   let dataobj = {
     username,
     password,
-    email,
-    // rememberme: true,   
+    email
   };
-  const formData = qs.stringify(dataobj)
-  const postData = { formData, $_isFormData: true }
+  const formData = qs.stringify(dataobj);
+  const postData = { formData, $_isFormData: true };
   return request({
     method: "post",
     url: "/register",
-    // withCredentials: true,
-    data: postData,
+    data: postData
   });
+}
+
+export function registerConfirm(userId, code) {
+  return request({
+    url: "/activation/" + userId + "/" + code,
+  })
 }

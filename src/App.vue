@@ -52,7 +52,7 @@ export default {
         this.$store.dispatch(ITLG, { userId: userid });
         // this.LinkTo("/home", "replace"); 
       }else {
-        this.LinkTo("/login");
+        // this.LinkTo("/login");
       }
     },
     reload(){

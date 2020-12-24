@@ -45,8 +45,8 @@
         <el-form-item>
           <div class="btnBox">
             <el-button class="btnItem" type="primary" @click="registerCLick"
-              >立即注册</el-button
-            >
+              >立即注册
+              </el-button>
           </div>
         </el-form-item>
       </el-form>
@@ -56,13 +56,13 @@
 
 <script>
 import { LinkTo } from "@/assets/utils/baseUtil";
-import { Register } from "@/network/register";
+import { sendRegister } from '@/network/register'
 export default {
   name: "",
   components: {},
   props: {},
   data() {
-    var validateID = (rule, value, callback) => {
+    const validateID = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("请输入账号"));
         // } else if (
@@ -75,7 +75,7 @@ export default {
         callback();
       }
     };
-    var validatePW = (rule, value, callback) => {
+    const validatePW = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("请输入密码"));
       } else {
@@ -85,7 +85,7 @@ export default {
         callback();
       }
     };
-    var validateRW = (rule, value, callback) => {
+    const validateRW = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("请再次确认密码"));
       } else if (value !== this.form.userPW) {
@@ -94,7 +94,7 @@ export default {
         callback();
       }
     };
-    var validateEM = (rule, value, callback) => {
+    const validateEM = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("请输入邮箱"));
       } else if (String(value).indexOf("@") === -1) {
@@ -126,28 +126,33 @@ export default {
       var _this = this;
       _this.$refs.form.validate((valid) => {
         if (!valid) return false;
-        let data = {
-          username: this.form.userID,
-          password: this.form.userPW,
-          email: this.form.userEM,
-        };
-        Register(data).then((res) => {
+        // let data = {
+        //   username: this.form.userID,
+        //   password: this.form.userPW,
+        //   email: this.form.userEM,
+        // };
+        // Register(data).then((res) => {
+        //   console.log(res);
+        //   if(res.code == "200") {
+        //     _this.$message({
+        //       message: res.msg,
+        //       type: "success",
+        //     });
+        //     // setTimeout(() => {
+        //     //   _this.LinkTo("/login", "replace");
+        //     // }, 2000);
+        //   }else {
+        //     _this.$message({
+        //       message: res.usernameMsg || res.passwordMsg || res.emailMsg,
+        //       type: "error"
+        //     })
+        //   }
+        // });
+        const { userID, userPW, userEM } = this.form;
+        sendRegister(userID, userPW, userEM).then(res=>{
           console.log(res);
-          if(res.code == "200") {
-            _this.$message({
-              message: res.msg,
-              type: "success",
-            });
-            // setTimeout(() => {
-            //   _this.LinkTo("/login", "replace");
-            // }, 2000);
-          }else {
-            _this.$message({
-              message: res.usernameMsg || res.passwordMsg || res.emailMsg,
-              type: "error"
-            })
-          }
-        });
+        })
+        console.log(this.form.userID + "注册成功！");
       });
     },
   },
