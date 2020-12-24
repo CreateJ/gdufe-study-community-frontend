@@ -17,13 +17,3 @@ export function getIndexDataNew(statu,page){
   })
 }
 
-export function searchPost(keyWord) {
-  return request({
-    params: {
-      keyword: keyWord
-    },
-    url: "/search",
-    method: "get"
-  });
-}
-

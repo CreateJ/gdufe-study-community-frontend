@@ -1,45 +1,40 @@
 <template>
   <div>
     <el-row>
-      <el-col
-        :xs="{ span: 22, offset: 1 }"
-        :sm="{ span: 22, offset: 1 }"
-        :md="{ span: 20, offset: 2 }"
-      >
-        <h1>修改头像</h1>
-        <el-upload
-          class="upload-demo"
-          action="http://localhost:8080/community/user/upload"
-          :on-preview="handlePreview"
-          :on-remove="handleRemove"
-          :before-remove="beforeRemove"
-          :http-request="uploadSectionFile"
-          name="file"
-          :limit="1"
-          :on-exceed="handleExceed"
-          :file-list="fileList"
+      <el-col :span="16" :offset="4">
+        <el-form
+          ref="form"
+          :model="form"
+          label-width="160px"
+          status-icon
+          :rules="rules"
+          class="pswForm"
         >
-          <el-button size="small" type="primary">点击上传</el-button>
-          <div slot="tip" class="el-upload__tip">
-            只能上传jpg/png文件，且不超过500kb
-          </div>
-        </el-upload>
-
-        <el-upload
-          style="display:inline-block"
-          :limit="5"
-          class="upload-demo"
-          ref="upload"
-          action="http://localhost:8080/community/user/upload"
-          :file-list="fileList"
-          :http-request="uploadSectionFile"
-          :auto-upload="true"
-          :before-remove="handleRemove"
-        >
-          <el-button slot="trigger" size="small" type="primary" plain>
-            选取文件
-          </el-button>
-        </el-upload>
+          <el-form-item label="旧密码" prop="oldPW" class="listItem">
+            <el-input
+              size="large"
+              v-model="form.oldPW"
+              placeholder="请输入旧密码"
+              show-password
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="新密码" prop="newPW" class="listItem">
+            <el-input
+              size="large"
+              v-model="form.newPW"
+              placeholder="请输入新密码"
+              show-password
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="确认新密码" prop="surePW" class="listItem">
+            <el-input
+              size="large"
+              v-model="form.sureRW"
+              placeholder="请确认新密码"
+              show-password
+            ></el-input>
+          </el-form-item>
+        </el-form>
       </el-col>
     </el-row>
   </div>
@@ -54,10 +49,46 @@ export default {
   components: {},
   props: {},
   data() {
+    var validateOPW = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入旧密码"));
+      } else {
+        if (this.form.oldPW !== "") {
+          this.$refs.form.validateField("oldPW");
+        }
+        callback();
+      }
+    };
+    var validateNPW = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入新密码"));
+      } else {
+        if (this.form.newPW !== "") {
+          this.$refs.form.validateField("newPW");
+        }
+        callback();
+      }
+    };
+    var validateSPW = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请再次确认密码"));
+      } else if (value !== this.form.surePW) {
+        callback(new Error("两次输入密码不一致"));
+      } else {
+        callback();
+      }
+    };
     return {
-      headerUrl: "",
-      password: "",
-      fileList: []
+      form: {
+        oldPW: "",
+        newPW: "",
+        surePW: "",
+      },
+      rules: {
+        oldPW: [{ validator: validateOPW, trigger: "blur" }],
+        newPW: [{ validator: validateNPW, trigger: "blur" }],
+        surePW: [{ validator: validateSPW, trigger: "blur" }],
+      },
     };
   },
   watch: {},
@@ -120,7 +151,15 @@ export default {
     }
   },
   created() {},
-  mounted() {}
+  mounted() {},
 };
 </script>
+<<<<<<< Updated upstream
 <style scoped></style>
+=======
+<style scoped>
+.pswForm {
+  padding: 20px 0;
+}
+</style>
+>>>>>>> Stashed changes

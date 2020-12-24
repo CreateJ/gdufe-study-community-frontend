@@ -48,7 +48,7 @@
         >
         <el-submenu index="2" v-show="$store.state.isLogin">
           <template slot="title">{{ $store.state.userName }}</template>
-          <el-menu-item :index="'/personal/' + userId"
+          <el-menu-item :index="'/personal/156' + userId"
             ><i class="el-icon-user icon_profile"></i>个人空间</el-menu-item
           >
           <el-menu-item index="/info"
@@ -83,7 +83,6 @@ export default {
       activeIndex2: "1",
       searchInput: "",
       userId: "",
-      personalIndex: "/personal/"
     };
   },
   watch: {},
