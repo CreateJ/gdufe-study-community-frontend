@@ -8,7 +8,7 @@
     <el-row class="postBox">
       <el-col :span="3" :offset="4">
         <img
-          :src="userHeaderUrl"
+          :src="$store.state.userInfo.user.headerUrl"
           alt=""
           class="tabHeaderUrl"
           v-if="$store.state.isLogin"
@@ -20,7 +20,7 @@
         >
           请登录
         </div>
-        <div class="tabUserName">{{ userName }}</div>
+        <div class="tabUserName">{{ $store.state.userInfo.user.username }}</div>
         <el-button type="primary" class="tabBotton" @click="clickPublish">发起讨论</el-button>
         <el-button type="primary" class="tabBotton">回到顶部</el-button>
       </el-col>
@@ -50,6 +50,7 @@ import Hello from "@/views/Home/Hello";
 import Dropdown from "@/views/Home/Dropdown";
 import HomePost from "@/views/Home/Post";
 import { LinkTo } from "@/assets/utils/baseUtil";
+import { searchPost } from "@/network/searchPost"
 
 export default {
   name: "",
@@ -102,10 +103,21 @@ export default {
       // console.log(res);
       this.postDatas = res.discussPosts;
     });
+
+    // this.$store.dispatch(ITLG, {userId : this.$store.state.userId});
     this.userHeaderUrl = this.$store.state.userInfo.user.headerUrl;
     this.userName = this.$store.state.userInfo.user.username;
   },
-  mounted() {}
+  mounted() {
+    this.$bus.$on('showSearchRes',
+    (inputString)=> {
+      // console.log(inputString)
+      searchPost(inputString).then(res=> {
+        this.postDatas = res.discussPosts;
+        console.log(res);
+      })
+    })
+  }
 };
 </script>
 <style scoped>

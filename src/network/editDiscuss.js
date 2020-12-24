@@ -12,3 +12,15 @@ export function publishDiscuss(title, content) {
     data: postData
   });
 }
+
+export function modifyDiscuss(discussPostId, title, content) {
+  const dataobj = { discussPostId: discussPostId, title:title, content:content };
+  console.log(dataobj);
+  const formData = qs.stringify(dataobj);
+  const postData = { formData, is_isFormData: true };
+  return request({
+    url: "/discuss/modify",
+    method: "post",
+    data: postData
+  });
+}

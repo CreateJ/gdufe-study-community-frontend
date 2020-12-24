@@ -50,7 +50,9 @@ export default {
         // 延时跳转
         this.$store.commit(LGSC);
         this.$store.dispatch(ITLG, { userId: userid });
-        // this.LinkTo("/home", "replace"); 暂时不用
+        // this.LinkTo("/home", "replace"); 
+      }else {
+        this.LinkTo("/login");
       }
     },
     reload(){

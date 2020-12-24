@@ -17,7 +17,7 @@
       :md=14
       class="menu_list">
       <el-input placeholder="快来挖掘宝藏吧！" v-model="searchInput" class="input">
-        <el-button slot="append" icon="el-icon-search" @click="searchCLick" class="search_btn"></el-button>
+        <el-button slot="append" icon="el-icon-search" @click="searchClick" class="search_btn"></el-button>
       </el-input>
 
       <el-menu
@@ -77,9 +77,10 @@ export default {
       clearLoingCookie();
       this.$store.commit(LGOT);
     },
-    searchCLick(){
+    searchClick(){
       console.log("正在进行搜索");
-    }
+      this.$bus.$emit('showSearchRes',this.searchInput);
+    },
   },
   created() {},
   mounted() {},

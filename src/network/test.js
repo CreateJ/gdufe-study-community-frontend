@@ -89,7 +89,7 @@ export function showFollowers(userId) {
 
 // 查找包含某个关键字的文章
 export function searchPost(keyWord) {
-  request({
+  return request({
     params: {
       keyword: keyWord
     },
@@ -97,6 +97,18 @@ export function searchPost(keyWord) {
     method: "get"
   });
 }
+
+// 查找包含某个关键字的文章
+// export function searchPost(keyWord) {
+//   request({
+//     // params: {
+//     //   keyword: keyWord
+//     // },
+//     url: "/search?keyWord="+keyWord,
+//     method: "get"
+//   });
+// }
+
 
 // 获取某个用户的所有文章
 export function getMyDiscussPost(userId) {
