@@ -7,14 +7,11 @@
     </el-row>
     <el-row class="postBox">
       <el-col :span="3" :offset="4">
-        <img
-          :src="userHeaderUrl"
-          alt=""
-          class="tabHeaderUrl"
-          v-if="$store.state.isLogin"
-        />
+        <template v-if="$store.state.isLogin">
+          <img :src="userHeaderUrl" alt="" class="tabHeaderUrl" />
+          <div class="tabUserName">{{ userName }}</div>
+        </template>
         <div class="tabHeaderUrl" v-else @click="LinkTo('/login')">请登录</div>
-        <div class="tabUserName">{{ userName }}</div>
         <el-button type="primary" class="tabBotton" @click="clickPublish"
           >发起讨论</el-button
         >
@@ -103,7 +100,7 @@ export default {
   },
   created() {
     // 清除可能存在的，注册留下的interval
-    
+
     // 获取首页文章列表
     getIndexData().then((res) => {
       this.postDatas = res.discussPosts;

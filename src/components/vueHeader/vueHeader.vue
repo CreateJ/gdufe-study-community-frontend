@@ -103,13 +103,12 @@ export default {
       this.$bus.$emit("showSearchRes", this.searchInput);
     },
   },
-  created() {},
-  mounted() {
+  created() {
     if (typeof this.$store.state.userInfo.user != "undefined") {
-      this.userId = this.$store.state.userInfo.user.id;
-      console.log(this.$store.state.userInfo.user);
+      this.userId = this.$store.state.userId;
     }
   },
+  mounted() {},
 };
 </script>
 <style scoped>

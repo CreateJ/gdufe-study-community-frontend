@@ -1,5 +1,5 @@
 <template>
-  <div class="replyPost">
+  <div class="replyPost" @click="toDetail(post.id)">
     <div class="title">{{post.title}}</div>
     <div class="content">{{post.content}}</div>
     <div class="delete-btn" @click="deletePost" v-if="canDelete"><i class="el-icon-delete"></i></div>
@@ -7,6 +7,7 @@
 </template>
 
 <script>
+import { LinkTo } from "@/assets/utils/baseUtil";
 export default {
   name: "MyReplyPost",
   props: {
@@ -19,8 +20,12 @@ export default {
     }
   },
   methods: {
+    LinkTo,
     deletePost() {
       this.$emit("deletePost");
+    },
+    toDetail(id) {
+      this.LinkTo("/discuss/" + id);
     }
   }
 }

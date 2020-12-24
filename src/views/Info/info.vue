@@ -29,7 +29,7 @@
           <el-form-item label="确认新密码" prop="surePW" class="listItem">
             <el-input
               size="large"
-              v-model="form.sureRW"
+              v-model="form.surePW"
               placeholder="请确认新密码"
               show-password
             ></el-input>
@@ -50,6 +50,7 @@
 <script>
 import axios from "axios";
 // import "vue-axios";
+import { LinkTo } from "@/assets/utils/baseUtil";
 import { getUserInfo, upLoadHeader, changePassword } from "@/network/info";
 export default {
   name: "",
@@ -61,7 +62,7 @@ export default {
         callback(new Error("请输入旧密码"));
       } else {
         if (this.form.oldPW !== "") {
-          this.$refs.form.validateField("oldPW");
+          this.$refs.form.validateField("newPW");
         }
         callback();
       }
@@ -71,7 +72,7 @@ export default {
         callback(new Error("请输入新密码"));
       } else {
         if (this.form.newPW !== "") {
-          this.$refs.form.validateField("newPW");
+          this.$refs.form.validateField("surePW");
         }
         callback();
       }
@@ -101,6 +102,7 @@ export default {
   watch: {},
   computed: {},
   methods: {
+    LinkTo,
     initPage() {
       getUserInfo(this.$store.state.userId)
         .then((res) => {
@@ -159,13 +161,17 @@ export default {
 
     modifyCLick() {
       var _this = this;
+        console.log("修改成功");
       _this.$refs.form.validate((valid) => {
         if (!valid) return false;
         const { oldPW, newPW, surePW } = this.form;
         changePassword(oldPW, newPW, surePW).then((res) => {
           console.log(res);
+          if(res.code=="200") {
+            this.$message.success("修改成功！请重新登录!");
+            this.LinkTo("/login")
+          }
         });
-        console.log(this.form.userID + "注册成功！");
       });
     },
   },

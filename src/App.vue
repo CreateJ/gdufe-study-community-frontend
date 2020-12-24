@@ -14,12 +14,14 @@
         <vue-footer></vue-footer>
       </el-footer>
     </el-container>
+    <scroll-top></scroll-top>
   </div>
 </template>
 
 <script>
 import vueHeader from "@/components/vueHeader/vueHeader";
 import vueFooter from "@/components/vueFooter/vueFooter";
+import ScrollTop from "@/components/scroll/scrollToTop"
 
 import { LinkTo } from "@/assets/utils/baseUtil"
 import { LGSC } from "@/store/mutations-types"
@@ -30,6 +32,7 @@ export default {
   components: {
     vueHeader,
     vueFooter,
+    ScrollTop
   },
   props: {},
   data() {

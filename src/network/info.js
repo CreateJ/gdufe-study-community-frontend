@@ -20,7 +20,7 @@ export function upLoadHeader(file) {
 }
 
 export function changePassword(oldPW, newPW, surePW) {
-  const dataobj = { oldPW, newPW, surePW };
+  const dataobj = { oldPassword: oldPW, newPassword: newPW, newPasswordConfirm: surePW };
   const formData = qs.stringify(dataobj);
   const postData = { formData, is_isFormData: true };
   return request({
