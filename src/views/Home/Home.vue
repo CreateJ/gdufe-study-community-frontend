@@ -98,6 +98,8 @@ export default {
     }
   },
   created() {
+    // 清除可能存在的，注册留下的interval
+    
     // 获取首页文章列表
     getIndexData().then(res => {
       // console.log(res);

@@ -4,6 +4,7 @@ import Router from "vue-router";
 const Home = () => import("@/views/Home/Home");
 const Discuss = () => import("@/views/Discuss/Discuss");
 const Register = () => import("@/views/Register/register");
+const Activation = () => import("@/views/Register/activation");
 const Login = () => import("@/views/Login/login");
 const Personal = () => import("@/views/Personal/personal");
 const Message = () => import("@/views/Message/message");
@@ -35,6 +36,11 @@ export default new Router({
       path: "/register",
       name: "register",
       component: Register
+    },
+    {
+      path: "/activation/:userId/:code",
+      name: "activation",
+      component: Activation
     },
     {
       path: "/login",

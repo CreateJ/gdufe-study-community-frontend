@@ -43,8 +43,7 @@
           <el-menu-item index="/info"><i class="el-icon-edit icon_profile"></i>修改信息</el-menu-item>
           <!-- 点击退出登录将直接跳转到home，恢复至未登录状态 -->
           <el-menu-item index="/home" @click="logout"
-            ><i class="el-icon-switch-button icon_profile"></i>退出登录</el-menu-item
-          >
+            ><i class="el-icon-switch-button icon_profile"></i>退出登录</el-menu-item>
         </el-submenu>
       </el-menu>
     </el-col>

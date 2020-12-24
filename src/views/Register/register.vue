@@ -45,8 +45,8 @@
         <el-form-item>
           <div class="btnBox">
             <el-button class="btnItem" type="primary" @click="registerCLick"
-              >立即注册</el-button
-            >
+              >立即注册
+              </el-button>
           </div>
         </el-form-item>
       </el-form>
@@ -55,12 +55,13 @@
 </template>
 
 <script>
+import { sendRegister } from '@/network/register'
 export default {
   name: "",
   components: {},
   props: {},
   data() {
-    var validateID = (rule, value, callback) => {
+    const validateID = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("请输入账号"));
       } else if (
@@ -73,7 +74,7 @@ export default {
         callback();
       }
     };
-    var validatePW = (rule, value, callback) => {
+    const validatePW = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("请输入密码"));
       } else {
@@ -83,7 +84,7 @@ export default {
         callback();
       }
     };
-    var validateRW = (rule, value, callback) => {
+    const validateRW = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("请再次确认密码"));
       } else if (value !== this.form.userPW) {
@@ -92,7 +93,7 @@ export default {
         callback();
       }
     };
-    var validateEM = (rule, value, callback) => {
+    const validateEM = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("请输入邮箱"));
       } else if (String(value).indexOf("@") === -1) {
@@ -122,7 +123,10 @@ export default {
     registerCLick() {
       this.$refs.form.validate((valid) => {
         if (!valid) return false;
-
+        const { userID, userPW, userEM } = this.form;
+        sendRegister(userID, userPW, userEM).then(res=>{
+          console.log(res);
+        })
         console.log(this.form.userID + "注册成功！");
       });
     },
