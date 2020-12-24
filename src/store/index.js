@@ -74,6 +74,7 @@ const store = new Vuex.Store({
     [ITLG](context, payload) {
       //payload包含userID，用于网络请求获取
       getUserInfo(payload.userId).then(res => {
+        // console.log(res,222);
         context.commit(SUIF, {
           userid: res.user.id,
           username: res.user.username,

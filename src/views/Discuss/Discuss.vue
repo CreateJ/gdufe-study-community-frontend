@@ -43,6 +43,8 @@
           </el-col>
           <el-col :span="3" class="mainBox_right">
             <button class="replyBtn_right" @click="clickReply">回复</button>
+            <br />
+            <button v-show="postman.id === $store.state.userId" class="replyBtn_right" @click="clickReEdit">编辑</button>
           </el-col>
         </el-row>
       </el-main>
@@ -72,7 +74,7 @@
 import { getPostAllInfo } from "@/network/discuss";
 import { AddComment } from "@/network/reply";
 import { LinkTo,refeshTo } from "@/assets/utils/baseUtil";
-import { OPDE, CODE, URRI } from "@/store/mutations-types";
+import { OPDE, CODE, URRI, CETR } from "@/store/mutations-types";
 import { GRPI } from "@/store/actions-types";
 import DiscussItem from "@/views/Discuss/DiscussItem";
 import vueDrawer from "@/components/drawer/drawer";
@@ -156,6 +158,10 @@ export default {
       };
       this.$store.commit(URRI, replyRequestInfo);
       this.$store.dispatch(GRPI, payload);
+    },
+    clickReEdit() {
+      this.$store.commit(CETR, { postId: this.$route.params.postId})
+      this.LinkTo("/editDiscuss")
     }
   },
   created() {
@@ -214,6 +220,7 @@ export default {
   border-radius: 2px;
   box-shadow: 0 0 8px 2px rgb(233, 233, 233);
   background-color: var(--main-color);
+  margin-bottom: 20px;
 }
 .replyRegion {
   margin: 20px 0;

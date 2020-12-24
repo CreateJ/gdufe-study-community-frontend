@@ -36,7 +36,8 @@
 </template>
 
 <script>
-import { publishDiscuss } from "@/network/editDiscuss";
+import { publishDiscuss, modifyDiscuss } from "@/network/editDiscuss";
+import { getPostAllInfo } from "@/network/discuss";
 import { LinkTo } from "@/assets/utils/baseUtil";
 export default {
   name: "",
@@ -57,6 +58,11 @@ export default {
       console.log(this.editType);
       if (this.editType === "reEdit") {
         // 发送修改文章请求
+        const postId = this.$store.state.reEditPostId;
+        getPostAllInfo(postId).then((res) => {
+          this.title = res.post.title;
+          this.content = res.post.content;
+        });
       }
     },
     LinkTo,
@@ -74,8 +80,14 @@ export default {
             console.log(err);
             this.LinkTo("/home");
           });
-      }else{
-        
+      }else if(this.editType === "reEdit"){
+        modifyDiscuss(this.$store.state.reEditPostId, this.title,this.content).then(res => {
+          this.$message({
+              message: "重新发布成功，即将跳转到首页",
+              type: "success",
+            });
+          this.LinkTo("/home");
+        })
       }
     },
     clickCancle(){

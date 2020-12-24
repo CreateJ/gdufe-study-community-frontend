@@ -8,17 +8,30 @@
     <el-row class="postBox">
       <el-col :span="3" :offset="4">
         <img
-          :src="userHeaderUrl"
+          :src="$store.state.userInfo.user.headerUrl"
           alt=""
           class="tabHeaderUrl"
           v-if="$store.state.isLogin"
         />
+<<<<<<< HEAD
         <div class="tabHeaderUrl" v-else @click="LinkTo('/login')">请登录</div>
         <div class="tabUserName">{{ userName }}</div>
         <el-button type="primary" class="tabBotton" @click="clickPublish"
           >发起讨论</el-button
         >
         <!-- <el-button type="primary" class="tabBotton">回到顶部</el-button> -->
+=======
+        <div
+          class="tabHeaderUrl"
+          v-else
+          @click="LinkTo('/login')"
+        >
+          请登录
+        </div>
+        <div class="tabUserName">{{ $store.state.userInfo.user.username }}</div>
+        <el-button type="primary" class="tabBotton" @click="clickPublish">发起讨论</el-button>
+        <el-button type="primary" class="tabBotton">回到顶部</el-button>
+>>>>>>> c0765987768df0a6fb4541c8aa05439ed47db7e8
       </el-col>
       <el-col :span="13">
         <dropdown @changeOrderMode="changeOrderMode"></dropdown>
@@ -51,7 +64,12 @@ import { LinkTo, refeshTo } from "@/assets/utils/baseUtil";
 import Hello from "@/views/Home/Hello";
 import Dropdown from "@/views/Home/Dropdown";
 import HomePost from "@/views/Home/Post";
+<<<<<<< HEAD
 import ScrollTop from "@/components/scroll/scrollToTop";
+=======
+import { LinkTo } from "@/assets/utils/baseUtil";
+import { searchPost } from "@/network/searchPost"
+>>>>>>> c0765987768df0a6fb4541c8aa05439ed47db7e8
 
 export default {
   name: "",
@@ -106,6 +124,7 @@ export default {
       this.postDatas = res.discussPosts;
     });
 
+<<<<<<< HEAD
     if (typeof (this.$store.state.userInfo.user) != "undefined") {
       this.userHeaderUrl = this.$store.state.userInfo.user.headerUrl;
       this.userName = this.$store.state.userInfo.user.username;
@@ -121,6 +140,22 @@ export default {
   beforeDestroy() {
     this.$bus.$off("searchPost");
   },
+=======
+    // this.$store.dispatch(ITLG, {userId : this.$store.state.userId});
+    this.userHeaderUrl = this.$store.state.userInfo.user.headerUrl;
+    this.userName = this.$store.state.userInfo.user.username;
+  },
+  mounted() {
+    this.$bus.$on('showSearchRes',
+    (inputString)=> {
+      // console.log(inputString)
+      searchPost(inputString).then(res=> {
+        this.postDatas = res.discussPosts;
+        console.log(res);
+      })
+    })
+  }
+>>>>>>> c0765987768df0a6fb4541c8aa05439ed47db7e8
 };
 </script>
 <style scoped>
