@@ -53,7 +53,7 @@
         >
         <el-submenu index="2" v-show="$store.state.isLogin">
           <template slot="title">{{ $store.state.userName }}</template>
-          <el-menu-item :index="'/personal/' + userId"
+          <el-menu-item :index="'/personal/' + $store.state.userId"
             ><i class="el-icon-user icon_profile"></i>个人空间</el-menu-item
           >
           <el-menu-item index="/info"
@@ -103,13 +103,12 @@ export default {
       this.$bus.$emit("showSearchRes", this.searchInput);
     },
   },
-  created() {},
-  mounted() {
+  created() {
     if (typeof this.$store.state.userInfo.user != "undefined") {
-      this.userId = this.$store.state.userInfo.user.id;
-      console.log(this.$store.state.userInfo.user);
+      this.userId = this.$store.state.userId;
     }
   },
+  mounted() {},
 };
 </script>
 <style scoped>
