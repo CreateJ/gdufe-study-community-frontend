@@ -6,7 +6,7 @@
         :sm="{ span: 22, offset: 1 }"
         :md="{ span: 20, offset: 2 }"
       >
-        {{ "激活成功，" + num + "秒内将跳转到登录页面" }}
+        <div class="message">{{ "激活成功，" + num + "秒内将跳转到登录页面" }}</div>
       </el-col>
     </el-row>
   </div>
@@ -57,4 +57,12 @@ export default {
   }
 };
 </script>
-<style scoped></style>
+<style scoped>
+.message {
+  width: 100%;
+  text-align: center;
+  font-size: 30px;
+  margin: 100px auto;
+  font-weight: bolder;
+}
+</style>

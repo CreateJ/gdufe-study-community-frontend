@@ -43,8 +43,10 @@
           </el-col>
           <el-col :span="3" class="mainBox_right">
             <button class="replyBtn_right" @click="clickReply">回复</button>
-            <br />
             <button v-show="postman.id === $store.state.userId" class="replyBtn_right" @click="clickReEdit">编辑</button>
+            <button v-show="$store.state.userType === 1" class="replyBtn_right" @click="clickSetTop">置顶</button>
+            <button v-show="$store.state.userType === 1" class="replyBtn_right" @click="clickSetWonderful">加精</button>
+
           </el-col>
         </el-row>
       </el-main>
@@ -160,6 +162,12 @@ export default {
     clickReEdit() {
       this.$store.commit(CETR, { postId: this.$route.params.postId})
       this.LinkTo("/editDiscuss")
+    },
+    clickSetTop(){
+      console.log('置顶')
+    },
+    clickSetWonderful(){
+      console.log('加精')
     }
   },
   created() {
@@ -171,7 +179,10 @@ export default {
     });
     this.$bus.$on("refreshData", ()=> {
       this.initDiscuss();
-    })
+    });
+    console.log(this.$store.state.userType)
+
+
   },
   beforeDestory() {
     this.$bus.$off("clickReply");
@@ -205,12 +216,14 @@ export default {
 }
 
 .mainBox_right {
+  height: 300px;
   position: fixed;
   right: 100px;
   top: 200px;
   padding-left: 30px;
 }
 .replyBtn_right {
+  display: block;
   color: #fff;
   letter-spacing: 0.2em;
   padding: 5px 20px;

@@ -12,6 +12,7 @@ const store = new Vuex.Store({
     isLogin: false,
     userId: "",
     userName: "undefine",
+    userType: 0,
     userInfo: {},
     baseURL: "http://localhost:8080/community",
 
@@ -43,7 +44,9 @@ const store = new Vuex.Store({
       s.userId = payload.userid;
       s.userName = payload.username;
       s.userInfo = payload.userinfo;
-      // console.log(s.userInfo);
+      s.userType = payload.userinfo.user.type;
+      // console.log(payload.userinfo.user.type);
+      console.log(payload.userinfo);
     },
     [OPDE](s) {
       s.drawerVisible = true;
@@ -74,7 +77,6 @@ const store = new Vuex.Store({
     [ITLG](context, payload) {
       //payload包含userID，用于网络请求获取
       getUserInfo(payload.userId).then(res => {
-        // console.log(res,222);
         context.commit(SUIF, {
           userid: res.user.id,
           username: res.user.username,
@@ -85,6 +87,7 @@ const store = new Vuex.Store({
     // 获取评论面板的信息,包括文章id，目标用户id
     [GRPI](context, payload) {
       getUserInfo(payload.userId).then(res => {
+        console.log(res);
         let userInfo = {};
         userInfo.userId = res.user.id;
         userInfo.userHeader = res.user.headerUrl;
