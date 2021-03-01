@@ -1,4 +1,22 @@
 # gdufe-study-community-frontend
 广财学习社区前端
 
-主页一览
+登录
+
+![image-20210301134927131](README/image-20210301134927131.png)
+
+主页
+
+![image-20210301134744372](README/image-20210301134744372.png)
+
+帖子
+
+![image-20210301134848878](README/image-20210301134848878.png)
+
+富文本
+
+![image-20210301135026311](README/image-20210301135026311.png)
+
+个人主页
+
+![image-20210301135049052](README/image-20210301135049052.png)
